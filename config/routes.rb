@@ -1,4 +1,5 @@
 Centraal::Application.routes.draw do
+  get "/:controller/:action"
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
