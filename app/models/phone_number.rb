@@ -1,7 +1,8 @@
 class PhoneNumber < ActiveRecord::Base
-  attr_accessible :incoming_number
 
   has_many :voicemails
+
+  validate :incoming_number, :unique => true
 
   def self.import_numbers
     TwilioWrapper.instance.incoming_phone_numbers.each do |incoming_phone_number|
@@ -10,7 +11,14 @@ class PhoneNumber < ActiveRecord::Base
   end
 
   def self.find_or_create_for_incoming_number(incoming_number)
-    where(:incoming_number => incoming_number).first || create!(:incoming_number => incoming_number)
+    where(:incoming_number => incoming_number).first || create_with_incoming_number!(incoming_number)
+  end
+
+  def self.create_with_incoming_number!(incoming_number)
+    new.tap do |phone_number|
+      phone_number.incoming_number = incoming_number
+      phone_number.save!
+    end
   end
 
   def self.null_object(attributes)
@@ -22,7 +30,7 @@ class PhoneNumber < ActiveRecord::Base
   end
 
   def speakable_incoming_number
-    incoming_number.gsub(/\D/, '').split('').join(" ")
+    incoming_number.gsub(/\D/, '').split('').join(", ")
   end
 
   def has_voicemail?
