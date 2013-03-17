@@ -31,11 +31,15 @@ class PhoneNumber < ActiveRecord::Base
   end
 
   def speakable_incoming_number
-    incoming_number.gsub(/\D/, '').split('').join(", ")
+    self.class.speakable_number(incoming_number)
   end
 
   def voicemail_on?
     voicemail
+  end
+
+  def self.speakable_number(number)
+    number.gsub(/\D/, '').split('').join(", ")
   end
 
   class NullPhoneNumber
@@ -43,6 +47,10 @@ class PhoneNumber < ActiveRecord::Base
 
     def initialize(attributes)
       @incoming_number = attributes[:incoming_number] || "unknown number"
+    end
+
+    def speakable_incoming_number
+      PhoneNumber.speakable_number(incoming_number)
     end
 
     def forwarding
