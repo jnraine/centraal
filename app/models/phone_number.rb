@@ -4,6 +4,9 @@ class PhoneNumber < ActiveRecord::Base
   has_many :voicemails
 
   validate :incoming_number, :unique => true
+  validates_each :incoming_number, :forwarding_number do |record, attr, value|
+    record.errors.add(attr, "is invalid. Try something like 123-555-1234.") unless valid_number?(value)
+  end
 
   def self.import_numbers
     TwilioWrapper.instance.incoming_phone_numbers.each do |incoming_phone_number|
@@ -26,6 +29,22 @@ class PhoneNumber < ActiveRecord::Base
     NullPhoneNumber.new(attributes)
   end
 
+  def self.speakable_number(number)
+    number.gsub(/\D/, '').split('').join(", ")
+  end
+
+  def self.valid_number?(number)
+    !!number.match(/\+\d{7}/)
+  end
+
+  def self.format_number(number)
+    formatted = number.gsub(/\D/, "")
+    return number if formatted.length < 10
+    formatted = "1#{formatted}" if formatted.length == 10
+    formatted = "+#{formatted}" if formatted.length == 11
+    formatted
+  end
+
   def forwarding?
     forwarding
   end
@@ -38,8 +57,12 @@ class PhoneNumber < ActiveRecord::Base
     voicemail
   end
 
-  def self.speakable_number(number)
-    number.gsub(/\D/, '').split('').join(", ")
+  def incoming_number=(number)
+    super self.class.format_number(number)
+  end
+
+  def forwarding_number=(number)
+    super self.class.format_number(number)
   end
 
   class NullPhoneNumber
