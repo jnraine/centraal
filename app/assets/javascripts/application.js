@@ -50,4 +50,15 @@ $(document).ready(function() {
           .end()
           .find(".display").hide();
       });
+
+  // Phone number expander
+  $(".phone-number")
+    .find(".form").hide().end()
+    .find(".incoming-number")
+      .css({cursor: "pointer"})
+      .click(function() {
+        $(this).closest(".phone-number")
+          .find(".form").slideToggle().end()
+          .find(".expand-icon").toggleClass("icon-caret-down");
+      });
 });

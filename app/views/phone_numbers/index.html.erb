@@ -1,6 +1,5 @@
-<h1>Phone Numbers</h1>
 
-<table class="table">
+<!-- <table class="table">
   <thead>
     <th>Incoming Number</th>
     <th>Forwarding Number</th>
@@ -20,6 +19,40 @@
       </tr>
     <% end %>
   <% end %>
-</table>
+</table> -->
+
+<div class="phone-number">
+  <% @phone_numbers.each do |phone_number| %>
+    <h4 class="incoming-number">
+      <%= icon(name: "caret-right", class: "expand-icon") %>
+      <%= icon(name: "phone") %> <%= phone_number.incoming_number %>
+    </h4>
+    <div class="form">
+      <%= bootstrap_form_for phone_number, class: "form-horizontal" do |f| %>
+        <%= f.text_field :forwarding_number, edit_on_click: true %>
+        <%= f.on_off :forwarding, labelled: true %>
+        <%= f.on_off :voicemail, labelled: true %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
 
 <%= button icon(name: "refresh", label: "Sync Numbers"), import_phone_numbers_path, method: :post, data: {"spin-on-click" => true, "click-text" => "Syncing..."} %>
+
+<!-- 
+  
+  Now, make view table-less. Put focus on incoming number and who it is 
+  assigned to. Upon click, reveal editable things like forwarding number 
+  and voicemail. 
+
+  Next, wire up the actual editing of the number. Once the edit page is 
+  no longer necessary, turn the show action into some kind of dashboard
+  for the incoming number. Some simple editable stuff, like forwarding
+  on or off, as well as a voicemail player, recent calls, and ability
+  to dial out from the web browser.
+
+  Question is, what should that page be modelled after? Doesn't have to
+  be a traditional phone — dialing is no longer necessary - but what
+  instead?
+
+-->

@@ -4,8 +4,9 @@ module ApplicationHelper
   end
 
   def icon(options)
+    classes = ["icon-#{options[:name]}", options[:class]].compact
     [
-      "<i class=\"icon-#{options[:name]}\"></i>", 
+      "<i class=\"#{classes.join(" ")}\"></i>", 
       options[:label]
     ].compact.join(" ").html_safe
   end
