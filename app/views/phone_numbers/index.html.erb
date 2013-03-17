@@ -1,0 +1,23 @@
+<h1>Phone Numbers</h1>
+
+<table class="table">
+  <thead>
+    <th>Incoming Number</th>
+    <th>Forwarding Number</th>
+    <th>Forwarding</th>
+    <th>Voicemail</th>
+    <th>Actions</th>
+  </thead>
+
+  <% @phone_numbers.each do |phone_number| %>
+    <tr>
+      <td><%= phone_number.incoming_number %></td>
+      <td><%= phone_number.forwarding_number %></td>
+      <td><%= phone_number.forwarding %></td>
+      <td><%= phone_number.voicemail %></td>
+      <td><%= link_to edit_icon, "#" %></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= button icon(name: "refresh", label: "Sync Numbers"), import_phone_numbers_path, method: :post %>

@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(:version => 20130311082243) do
 
   create_table "phone_numbers", :force => true do |t|
     t.boolean  "forwarding",        :default => false
+    t.boolean  "voicemail",         :default => false
     t.string   "forwarding_number"
     t.string   "incoming_number"
     t.string   "email"

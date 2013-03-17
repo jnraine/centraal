@@ -3,11 +3,11 @@ require 'spec_helper'
 describe TwilioWrapper do
 
   describe "#incoming_phone_numbers" do
-    it "returns incoming numbers registered with this app on Twilio" do
-      pending "Needs API to be live"
-      actual = TwilioWrapper.instance.incoming_phone_numbers
-      actual.should == ["+16042004455"]
-    end
+    # it "returns incoming numbers registered with this app on Twilio" do
+    #   # pending "Needs API to be live"
+    #   actual = TwilioWrapper.instance.incoming_phone_numbers
+    #   actual.should == ["+16042004455"]
+    # end
   end
 
   describe "#instance" do
