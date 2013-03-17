@@ -14,3 +14,18 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require_tree .
+
+$(document).ready(function() {
+  $("[data-spin-on-click]").click(function() {
+    $(this).find("i[class|='icon']").addClass("icon-spin");
+  });
+
+  $("[data-click-text]").click(function() {
+    var $link = $(this);
+    var spinText = $link.attr("data-click-text");
+    var $children = $link.children();
+    $link
+      .text(" " + spinText)
+      .prepend($children);
+  });
+});

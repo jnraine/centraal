@@ -20,4 +20,4 @@
   <% end %>
 </table>
 
-<%= button icon(name: "refresh", label: "Sync Numbers"), import_phone_numbers_path, method: :post %>
+<%= button icon(name: "refresh", label: "Sync Numbers"), import_phone_numbers_path, method: :post, data: {"spin-on-click" => true, "click-text" => "Syncing..."} %>
