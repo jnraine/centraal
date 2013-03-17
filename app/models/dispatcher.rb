@@ -15,7 +15,7 @@ class Dispatcher
   def receive_call
     if phone_number.forwarding?
       forward_call
-    elsif phone_number.has_voicemail?
+    elsif phone_number.voicemail_on?
       send_to_voicemail
     else
       unavailable_number
@@ -49,7 +49,7 @@ class Dispatcher
       r.Dial phone_number.forwarding_number, {
         :action => url_helpers.conclude_call_path,
         :method => :get, 
-        :timeout => 2
+        :timeout => 10
       }
     end.text
   end
@@ -64,7 +64,7 @@ class Dispatcher
 
   def unavailable_number
     Twilio::TwiML::Response.new do |r|
-      r.Say "#{phone_number.incoming_number} is not available at this time. Sorry for any inconvenience"
+      r.Say "#{phone_number.speakable_incoming_number}, is not available at this time. Sorry for any inconvenience. Good-bye."
     end.text
   end
 end

@@ -1,4 +1,5 @@
 class PhoneNumber < ActiveRecord::Base
+  attr_accessible :forwarding_number, :voicemail, :forwarding
 
   has_many :voicemails
 
@@ -33,8 +34,8 @@ class PhoneNumber < ActiveRecord::Base
     incoming_number.gsub(/\D/, '').split('').join(", ")
   end
 
-  def has_voicemail?
-    false
+  def voicemail_on?
+    voicemail
   end
 
   class NullPhoneNumber
@@ -48,7 +49,7 @@ class PhoneNumber < ActiveRecord::Base
       false
     end
 
-    def has_voicemail?
+    def voicemail_on?
       false
     end
 

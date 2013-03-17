@@ -15,7 +15,7 @@
       <td><%= phone_number.forwarding_number %></td>
       <td><%= phone_number.forwarding %></td>
       <td><%= phone_number.voicemail %></td>
-      <td><%= link_to edit_icon, "#" %></td>
+      <td><%= link_to edit_icon, edit_phone_number_path(phone_number) %></td>
     </tr>
   <% end %>
 </table>

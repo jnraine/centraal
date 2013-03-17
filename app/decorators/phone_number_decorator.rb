@@ -10,19 +10,11 @@ class PhoneNumberDecorator < Draper::Decorator
   end
 
   def voicemail
-    if model.voicemail
-      "On"
-    else
-      "Off"
-    end
+    model.voicemail ? "On" : "Off"
   end
 
   def forwarding
-    if model.forwarding
-      "On"
-    else
-      "Off"
-    end
+    model.forwarding ? "On" : "Off"
   end
 
   def decorate_number(number)

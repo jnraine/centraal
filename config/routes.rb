@@ -4,7 +4,7 @@ Centraal::Application.routes.draw do
   match "/dispatchers/receive_voicemail" => "dispatchers#receive_voicemail", :as => :receive_voicemail
   match "/dispatchers/receive_voicemail_transcription" => "dispatchers#receive_voicemail_transcription", :as => :receive_voicemail_transcription, :via => :post
 
-  resources :phone_numbers, :only => [:index] do
+  resources :phone_numbers, :only => [:index, :edit, :update] do
     post "import", :on => :collection
   end
 

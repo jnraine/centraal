@@ -14,4 +14,9 @@ module ApplicationHelper
     options = {:class => "btn"}.merge(options)
     link_to label, url, options
   end
+
+  def bootstrap_form_for(object, options = {}, &block)
+    options[:builder] = BootstrapFormBuilder
+    form_for(object, options, &block)
+  end
 end

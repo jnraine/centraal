@@ -3,6 +3,22 @@ class PhoneNumbersController < ApplicationController
     @phone_numbers = PhoneNumber.scoped.decorate
   end
 
+  def edit
+    @phone_number = PhoneNumber.find(params[:id]).decorate
+  end
+
+  def update
+    @phone_number = PhoneNumber.find(params[:id]).decorate
+
+    if @phone_number.update_attributes(params[:phone_number])
+      flash[:notice] = "#{@phone_number.incoming_number} updated"
+      redirect_to phone_numbers_path
+    else
+      flash[:error] = "Problem saving #{@phone_number.incoming_number}"
+      render :edit
+    end
+  end
+
   def import
     count_before_import = PhoneNumber.count
     PhoneNumber.import_numbers
