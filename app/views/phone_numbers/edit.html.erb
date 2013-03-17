@@ -1,30 +1,17 @@
 <h3><%= icon(name: "phone") %> <%= @phone_number.incoming_number %></h3>
 
-<%= form_for @phone_number do |f| %>
+<%= bootstrap_form_for @phone_number do |f| %>
   <div class="control-group">
     <%= f.label :forwarding_number %>
     <div class="controls">
-      <%= f.text_field :forwarding_number %>
+      <%= f.text_field :forwarding_number, value: @phone_number.forwarding_number %>
     </div>
   </div>
+  <%= f.text_field :forwarding_number, edit_on_click: true %>
+  <%= f.on_off :voicemail, labelled: true %>
+  <%= f.on_off :forwarding, labelled: true %>
 
-  <div class="control-group">
-    <%= f.label :voicemail %>
-    <div class="controls">
-      <div class="switch switch-small">
-        <%= f.check_box :voicemail %>
-      </div>
-    </div>
-  </div>
-
-  <div class="control-group">
-    <%= f.label :forwarding %>
-    <div class="controls">
-      <div class="switch switch-small">
-        <%= f.check_box :forwarding %>
-      </div>
-    </div>
-  </div>
-
-  <%= f.submit "Save Changes", :class => "btn btn-primary" %>
+  <%= content_tag :div, :class => "form-actions" do %>
+    <%= f.save_changes %>
+  <% end %>
 <% end %>

@@ -10,13 +10,15 @@
   </thead>
 
   <% @phone_numbers.each do |phone_number| %>
-    <tr>
-      <td><%= phone_number.incoming_number %></td>
-      <td><%= phone_number.forwarding_number %></td>
-      <td><%= phone_number.forwarding %></td>
-      <td><%= phone_number.voicemail %></td>
-      <td><%= link_to edit_icon, edit_phone_number_path(phone_number) %></td>
-    </tr>
+    <%= bootstrap_form_for phone_number do |f| %>
+      <tr>
+        <td><%= phone_number.incoming_number %></td>
+        <td><%= f.text_field :forwarding_number, edit_on_click: true %></td>
+        <td><%= f.on_off :forwarding %></td>
+        <td><%= f.on_off :voicemail %></td>
+        <td><%= link_to edit_icon, edit_phone_number_path(phone_number) %></td>
+      </tr>
+    <% end %>
   <% end %>
 </table>
 

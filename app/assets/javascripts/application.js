@@ -28,4 +28,26 @@ $(document).ready(function() {
       .text(" " + spinText)
       .prepend($children);
   });
+
+  $(".field_with_errors").closest(".control-group").addClass("error");
+
+  // Edit on click magic...a bit ugly
+  $(".edit-on-click")
+    .find(".field").hide().end()
+    .find(".display")
+      .css({cursor: "pointer"})
+      .click(function() {
+        $(this).closest(".edit-on-click")
+          .find(".field")
+            .show()
+            .find("input").first()
+              .focus().end()
+              .blur(function() {
+              $(this).closest(".field").hide().closest(".edit-on-click")
+                .find(".display").show();
+              })
+            .end()
+          .end()
+          .find(".display").hide();
+      });
 });
