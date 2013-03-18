@@ -3,17 +3,17 @@ require 'spec_helper'
 describe PhoneNumber do
   describe ".import_numbers" do
     it "can import phone numbers from Twilio" do
-      TwilioWrapper.instance.should_receive(:incoming_phone_numbers).and_return(["one", "two"])
+      TwilioWrapper.instance.should_receive(:incoming_phone_numbers).and_return(["+15551234567", "+15557654321"])
       PhoneNumber.import_numbers
       PhoneNumber.count.should == 2
-      PhoneNumber.first.incoming_number.should == "one"
+      PhoneNumber.first.incoming_number.should == "+15551234567"
     end
 
     it "creates records only for numbers that don't already exist" do
-      TwilioWrapper.instance.should_receive(:incoming_phone_numbers).and_return(["one", "two"])
-      existing_number = PhoneNumber.new.tap {|p| p.incoming_number = "one"; p.save! }
+      TwilioWrapper.instance.should_receive(:incoming_phone_numbers).and_return(["+15551234567", "+15557654321"])
+      existing_number = PhoneNumber.new.tap {|p| p.incoming_number = "+15551234567"; p.save! }
       PhoneNumber.import_numbers
-      PhoneNumber.where(:incoming_number => "one").count.should == 1
+      PhoneNumber.where(:incoming_number => "+15551234567").count.should == 1
     end
   end
 
@@ -25,6 +25,10 @@ describe PhoneNumber do
     it "returns true when a number is in E.164 format" do
       PhoneNumber.valid_number?("+16045551234").should be_true
       PhoneNumber.valid_number?("+1 604 555 1234").should be_false
+    end
+
+    it "returns true when nil" do
+      PhoneNumber.valid_number?(nil).should be_true
     end
   end
 

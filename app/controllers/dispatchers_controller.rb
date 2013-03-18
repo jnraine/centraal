@@ -1,5 +1,6 @@
 class DispatchersController < ApplicationController
   def receive_call
+    puts dispatcher.receive_call.inspect
     render :text => dispatcher.receive_call
   end
 
@@ -24,6 +25,16 @@ class DispatchersController < ApplicationController
     end
 
     render :text => ""
+  end
+
+  def receive_voicemail_greeting
+    dispatcher.phone_number.voicemail_greeting = params["RecordingUrl"]
+    render :text => dispatcher.receive_voicemail_greeting
+  end
+
+  def process_owner_gather
+    puts params.inspect
+    render :text => dispatcher.process_owner_gather
   end
 
   private

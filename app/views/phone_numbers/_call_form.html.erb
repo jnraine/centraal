@@ -1,4 +1,6 @@
 <%= form_tag do %>
-  <%= telephone_field_tag "number", "", placeholder: "e.g., (123) 456-7890" %>
-  <%= button "#{icon(name: "phone")} Call".html_safe, "#", class: "btn btn-success" %>
+  <%= telephone_field_tag "number", "", placeholder: "e.g., (123) 456-7890", id: "tocall" %>
+  <%= button "#{icon(name: "phone")} Call".html_safe, "#", class: "btn btn-success", id: "start-call" %>
+  <%= button "Hang Up", "#", class: "btn btn-error", id: "hangup" %>
+  <p id="status">Status</p>
 <% end %>

@@ -5,6 +5,7 @@ class CreatePhoneNumbers < ActiveRecord::Migration
       t.boolean :voicemail, :default => false
       t.string :forwarding_number
       t.string :incoming_number
+      t.string :voicemail_greeting
       t.string :email
       t.timestamps
     end

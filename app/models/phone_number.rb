@@ -34,6 +34,7 @@ class PhoneNumber < ActiveRecord::Base
   end
 
   def self.valid_number?(number)
+    return true if number.nil?
     !!number.match(/\+\d{7}/)
   end
 

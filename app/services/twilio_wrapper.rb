@@ -15,6 +15,13 @@ class TwilioWrapper
     account.applications.get(app_sid)
   end
 
+  def client_token(client_name)
+    Twilio::Util::Capability.new(account_sid, auth_token).tap do |c|
+      c.allow_client_outgoing(app_sid)
+      c.allow_client_incoming(client_name)
+    end.generate
+  end
+
   def app_sid
     setting "app_sid"
   end

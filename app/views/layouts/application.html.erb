@@ -74,7 +74,9 @@
     <!-- Javascripts
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="//static.twilio.com/libs/twiliojs/1.1/twilio.min.js"></script>
     <%= javascript_include_tag "application" %>
+    <%= yield(:inline_js) if content_for?(:inline_js) %>
 
   </body>
 </html>

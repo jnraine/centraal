@@ -14,13 +14,14 @@
 ActiveRecord::Schema.define(:version => 20130311082243) do
 
   create_table "phone_numbers", :force => true do |t|
-    t.boolean  "forwarding",        :default => false
-    t.boolean  "voicemail",         :default => false
+    t.boolean  "forwarding",         :default => false
+    t.boolean  "voicemail",          :default => false
     t.string   "forwarding_number"
     t.string   "incoming_number"
+    t.string   "voicemail_greeting"
     t.string   "email"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
   end
 
   create_table "voicemails", :force => true do |t|
@@ -30,8 +31,9 @@ ActiveRecord::Schema.define(:version => 20130311082243) do
     t.string   "call_sid"
     t.integer  "phone_number_id"
     t.text     "transcription"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.boolean  "read",            :default => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
   end
 
 end
