@@ -11,6 +11,7 @@
           <%= f.text_field :forwarding_number %>
           <%= f.on_off :forwarding, labelled: true %>
           <%= f.on_off :voicemail, labelled: true %>
+          <%= render partial: "voicemail_listing", locals: {phone_number: phone_number} %>
           <%= f.save_changes %>
       </div>
     <% end %>

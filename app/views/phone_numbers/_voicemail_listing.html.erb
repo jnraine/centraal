@@ -1,0 +1,10 @@
+<% if phone_number.voicemails.present? %>
+  <h5>Voicemail</h5>
+  <% phone_number.voicemails.each do |voicemail| %>
+    <div class="voicemail">
+      <%= link_to "#{phone_number.decorate_number(voicemail.from)} at #{voicemail.created_at.strftime("%B %-d, %Y at %l:%M%P")}", voicemail.recording_url %>
+    </div>
+  <% end %>
+<% else %>
+  <em>No voicemails</em>
+<% end %>
