@@ -1,41 +1,23 @@
-
-<!-- <table class="table">
-  <thead>
-    <th>Incoming Number</th>
-    <th>Forwarding Number</th>
-    <th>Forwarding</th>
-    <th>Voicemail</th>
-    <th>Actions</th>
-  </thead>
-
-  <% @phone_numbers.each do |phone_number| %>
-    <%= bootstrap_form_for phone_number do |f| %>
-      <tr>
-        <td><%= phone_number.incoming_number %></td>
-        <td><%= f.text_field :forwarding_number, edit_on_click: true %></td>
-        <td><%= f.on_off :forwarding %></td>
-        <td><%= f.on_off :voicemail %></td>
-        <td><%= link_to edit_icon, edit_phone_number_path(phone_number) %></td>
-      </tr>
-    <% end %>
-  <% end %>
-</table> -->
-
 <div class="phone-number">
   <% @phone_numbers.each do |phone_number| %>
-    <h4 class="incoming-number">
+    <h4>
       <%= icon(name: "caret-right", class: "expand-icon") %>
-      <%= icon(name: "phone") %> <%= phone_number.incoming_number %>
+      <span class="incoming-number"><%= phone_number.incoming_number %></span>
+      <%= button "#{icon(name: "phone")} Make Call".html_safe, "#", class: "btn btn-info btn-mini", data: {toggle: "popover", placement: "bottom", content: call_form } %>
     </h4>
-    <div class="form">
-      <%= bootstrap_form_for phone_number, class: "form-horizontal" do |f| %>
-        <%= f.text_field :forwarding_number, edit_on_click: true %>
-        <%= f.on_off :forwarding, labelled: true %>
-        <%= f.on_off :voicemail, labelled: true %>
-      <% end %>
-    </div>
+
+    <%= bootstrap_form_for phone_number, class: "form-horizontal" do |f| %>
+      <div class="form well">
+          <%= f.text_field :forwarding_number %>
+          <%= f.on_off :forwarding, labelled: true %>
+          <%= f.on_off :voicemail, labelled: true %>
+          <%= f.save_changes %>
+      </div>
+    <% end %>
   <% end %>
 </div>
+
+<br>
 
 <%= button icon(name: "refresh", label: "Sync Numbers"), import_phone_numbers_path, method: :post, data: {"spin-on-click" => true, "click-text" => "Syncing..."} %>
 

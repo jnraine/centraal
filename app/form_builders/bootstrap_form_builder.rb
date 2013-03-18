@@ -12,12 +12,7 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def text_field(name, *args)
-    options = args.last || {}
-    if options.fetch(:edit_on_click, false)
-      edit_on_click_text_field(name, options)
-    else
-      super
-    end
+    label(name) + super(name, *args)
   end
 
   def edit_on_click_text_field(name, options = {})
@@ -35,6 +30,8 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def save_changes(options = {})
-    submit "Save Changes", {:class => "btn btn-primary"}.merge(options)
+    classes = ["btn", "btn-primary"]
+    classes << "btn-#{options[:size]}" if options.has_key?(:size)
+    submit "Save Changes", {:class => classes.join(" ")}.merge(options)
   end
 end

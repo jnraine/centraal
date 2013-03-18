@@ -20,4 +20,8 @@ module ApplicationHelper
     options[:builder] = BootstrapFormBuilder
     form_for(object, options, &block)
   end
+
+  def call_form
+    render(partial: "call_form").to_str
+  end
 end

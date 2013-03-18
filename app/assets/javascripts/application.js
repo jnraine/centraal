@@ -59,6 +59,10 @@ $(document).ready(function() {
       .click(function() {
         $(this).closest(".phone-number")
           .find(".form").slideToggle().end()
-          .find(".expand-icon").toggleClass("icon-caret-down");
+          .find(".expand-icon").swapIcon("caret-down", "caret-right");
       });
+
+  setTimeout(function() { $(".alert").slideUp(); }, 5000);
+
+  $("[data-toggle='popover']").popover({html: true});
 });

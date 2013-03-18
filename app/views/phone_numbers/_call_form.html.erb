@@ -1,0 +1,4 @@
+<%= form_tag do %>
+  <%= telephone_field_tag "number", "", placeholder: "e.g., (123) 456-7890" %>
+  <%= button "#{icon(name: "phone")} Call".html_safe, "#", class: "btn btn-success" %>
+<% end %>
