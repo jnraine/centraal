@@ -7,7 +7,7 @@ Centraal::Application.routes.draw do
   match "/dispatchers/receive_voicemail_greeting" => "dispatchers#receive_voicemail_greeting", :as => :receive_voicemail_greeting, :via => :post
 
   resources :phone_numbers, :only => [:index, :edit, :update] do
-    post "import", :on => :collection
+    post "sync", :on => :collection
   end
 
   root :to => redirect("/phone_numbers")

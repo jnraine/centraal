@@ -19,16 +19,16 @@ class PhoneNumbersController < ApplicationController
     end
   end
 
-  def import
-    count_before_import = PhoneNumber.count
-    PhoneNumber.import_numbers
-    count_after_import = PhoneNumber.count
+  def sync
+    count_before_sync = PhoneNumber.count
+    PhoneNumber.sync_numbers
+    count_after_sync = PhoneNumber.count
     
-    if count_before_import == count_after_import
+    if count_before_sync == count_after_sync
       flash[:notice] = "No new numbers added from Twilio"
     else
-      difference = count_after_import - count_before_import
-      flash[:notice] = "#{difference} phone numbers imported from Twilio"
+      difference = count_after_sync - count_before_sync
+      flash[:notice] = "#{difference} phone numbers synced from Twilio"
     end
 
     redirect_to phone_numbers_path

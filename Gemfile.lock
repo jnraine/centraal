@@ -38,6 +38,7 @@ GEM
       execjs
     coffee-script-source (1.6.1)
     commonjs (0.2.6)
+    database_cleaner (0.9.1)
     diff-lcs (1.2.1)
     draper (1.1.0)
       actionpack (>= 3.0)
@@ -143,6 +144,7 @@ PLATFORMS
 
 DEPENDENCIES
   coffee-rails (~> 3.2.1)
+  database_cleaner (~> 0.9.1)
   draper (~> 1.1.0)
   jquery-rails
   less-rails

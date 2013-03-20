@@ -29,7 +29,11 @@ class DispatchersController < ApplicationController
 
   def receive_voicemail_greeting
     dispatcher.phone_number.voicemail_greeting = params["RecordingUrl"]
-    render :text => dispatcher.receive_voicemail_greeting
+    if dispatcher.phone_number.save
+      render :text => dispatcher.receive_voicemail_greeting
+    else
+
+    end
   end
 
   def process_owner_gather

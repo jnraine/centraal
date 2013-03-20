@@ -1,19 +1,22 @@
 require 'spec_helper'
 
 describe PhoneNumber do
-  describe ".import_numbers" do
-    it "can import phone numbers from Twilio" do
-      TwilioWrapper.instance.should_receive(:incoming_phone_numbers).and_return(["+15551234567", "+15557654321"])
-      PhoneNumber.import_numbers
+  describe ".sync_numbers" do
+    let(:bobs_office) { "+15551234567" }
+    let(:amys_office) { "+15557654321" }
+
+    it "can sync missing phone numbers from Twilio" do
+      TwilioWrapper.instance.should_receive(:incoming_phone_numbers).and_return([bobs_office, amys_office])
+      PhoneNumber.sync_numbers
       PhoneNumber.count.should == 2
-      PhoneNumber.first.incoming_number.should == "+15551234567"
+      PhoneNumber.all.map(&:incoming_number).should == [bobs_office, amys_office]
     end
 
     it "creates records only for numbers that don't already exist" do
-      TwilioWrapper.instance.should_receive(:incoming_phone_numbers).and_return(["+15551234567", "+15557654321"])
-      existing_number = PhoneNumber.new.tap {|p| p.incoming_number = "+15551234567"; p.save! }
-      PhoneNumber.import_numbers
-      PhoneNumber.where(:incoming_number => "+15551234567").count.should == 1
+      TwilioWrapper.instance.should_receive(:incoming_phone_numbers).and_return([bobs_office, amys_office])
+      existing_number = PhoneNumber.new.tap {|p| p.incoming_number = bobs_office; p.save! }
+      PhoneNumber.sync_numbers
+      PhoneNumber.where(:incoming_number => bobs_office).count.should == 1
     end
   end
 

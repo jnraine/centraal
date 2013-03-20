@@ -54,6 +54,10 @@ class Dispatcher
     Rails.application.routes.url_helpers
   end
 
+  def call_from_owner?
+    phone_number.forwarding_number == from
+  end
+
   def handle_call_from_owner
     Twilio::TwiML::Response.new do |r|
       r.Gather numDigits: 1, action: url_helpers.process_owner_gather_path do
@@ -85,16 +89,30 @@ class Dispatcher
   end
 
   def play_voicemail_greeting
-    Twilio::TwiML::Response.new do |r|
-      r.Play phone_number.voicemail_greeting
-      r.Redirect receive_call_path, method: :get
-    end.text
+    if phone_number.voicemail_greeting.present?
+      Twilio::TwiML::Response.new do |r|
+        r.Play phone_number.voicemail_greeting
+        r.Redirect url_helpers.receive_call_path, method: :get
+      end.text
+    else
+      Twilio::TwiML::Response.new do |r|
+        r.Say "No voicemail greeting found for #{phone_number.speakable_incoming_number}"
+        r.Redirect url_helpers.receive_call_path, method: :get
+      end.text
+    end
   end
 
   def receive_voicemail_greeting
     Twilio::TwiML::Response.new do |r|
       r.Say "Your new voicemail greeting has been saved."
-      r.Redirect receive_call_path, method: :get
+      r.Redirect url_helpers.receive_call_path, method: :get
+    end.text
+  end
+
+  def failed_to_receive_voicemail_greeting
+    Twilio::TwiML::Response.new do |r|
+      r.Say "A problem occurred while saving your voicemail greeting."
+      r.Redirect url_helpers.receive_call_path, method: :get
     end.text
   end
 

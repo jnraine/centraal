@@ -18,7 +18,8 @@ group :assets do
 end
 
 group :development, :test do
-  gem 'rspec-rails'  
+  gem 'rspec-rails'
+  gem "database_cleaner", "~> 0.9.1"
 end
 
 gem 'jquery-rails'

@@ -8,7 +8,7 @@ class PhoneNumber < ActiveRecord::Base
     record.errors.add(attr, "is invalid. Try something like 123-555-1234.") unless valid_number?(value)
   end
 
-  def self.import_numbers
+  def self.sync_numbers
     TwilioWrapper.instance.incoming_phone_numbers.each do |incoming_phone_number|
       find_or_create_for_incoming_number(incoming_phone_number)
     end
