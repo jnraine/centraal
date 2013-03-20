@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe PhoneNumber do
-  describe ".sync_numbers" do
-    let(:bobs_office) { "+15551234567" }
-    let(:amys_office) { "+15557654321" }
+  let(:bobs_office) { "+15551234567" }
+  let(:amys_office) { "+15557654321" }
 
+  describe ".sync_numbers" do
     it "can sync missing phone numbers from Twilio" do
       TwilioWrapper.instance.should_receive(:incoming_phone_numbers).and_return([bobs_office, amys_office])
       PhoneNumber.sync_numbers
@@ -52,6 +52,17 @@ describe PhoneNumber do
     it "can be instantiated with an incoming number" do
       null_phone_number = PhoneNumber::NullPhoneNumber.new(incoming_number: "foobarbaz")
       null_phone_number.incoming_number.should == "foobarbaz"
+    end
+  end
+
+  describe ".for_incoming_number" do
+    it "returns a phone number instance when it existst" do
+      existing = PhoneNumber.new.tap {|pn| pn.incoming_number = bobs_office; pn.save! }
+      PhoneNumber.for_incoming_number(bobs_office).should == existing
+    end
+
+    it "returns a null phone number instance with matching incoming number when a record doesn't exist for incoming number" do
+      PhoneNumber.for_incoming_number(bobs_office).incoming_number.should == bobs_office
     end
   end
 end

@@ -25,6 +25,10 @@ class PhoneNumber < ActiveRecord::Base
     end
   end
 
+  def self.for_incoming_number(incoming_phone_number)
+    PhoneNumber.where(incoming_number: incoming_phone_number).first || PhoneNumber.null_object(incoming_number: incoming_phone_number)
+  end
+
   def self.null_object(attributes)
     NullPhoneNumber.new(attributes)
   end

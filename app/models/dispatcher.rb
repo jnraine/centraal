@@ -1,17 +1,16 @@
 class Dispatcher
-  attr_reader :phone_number, :dial_call_status, :from, :call_sid, :outgoing_number, :digits
+  attr_reader :phone_number, :dial_call_status, :from, :call_sid, :outgoing_number, :digits, :recording_url, :recording_duration, :transcription_text
 
   def initialize(params)
-    @phone_number = retrieve_phone_number(params["To"])
+    @phone_number = PhoneNumber.for_incoming_number(params["To"])
     @dial_call_status = params["DialCallStatus"]
     @call_sid = params["CallSid"]
     @from = params["From"]
     @outgoing_number = params["OutgoingNumber"]
     @digits = params["Digits"]
-  end
-
-  def retrieve_phone_number(incoming_phone_number)
-    PhoneNumber.where(:incoming_number => incoming_phone_number).first || PhoneNumber.null_object(:incoming_number => incoming_phone_number)
+    @recording_url = params["RecordingUrl"]
+    @recording_duration = params["RecordingDuration"]
+    @transcription_text = params["TranscriptionText"]
   end
 
   def receive_call
@@ -103,6 +102,9 @@ class Dispatcher
   end
 
   def receive_voicemail_greeting
+    phone_number.voicemail_greeting = recording_url
+    phone_number.save
+
     Twilio::TwiML::Response.new do |r|
       r.Say "Your new voicemail greeting has been saved."
       r.Redirect url_helpers.receive_call_path, method: :get
@@ -135,22 +137,53 @@ class Dispatcher
     end.text
   end
 
+  def receive_voicemail
+    voicemail = Voicemail.where(call_sid: call_sid).first
+    raise "Voicemail not found!" if voicemail.nil?
+    
+    voicemail.tap do |vm|
+      vm.recording_url = recording_url
+      vm.duration = recording_duration
+      vm.save
+    end
+
+    hang_up
+  end
+
+  def recoive_voicemail_transcription
+    Voicemail.for_call_sid(call_sid).tap do |vm|
+      vm.transcription = transcription_text
+      vm.save
+    end
+
+    ""
+  end
+
   def record_voicemail
-    Voicemail.create!(:call_sid => call_sid, :from => from, :phone_number => phone_number)
+    Voicemail.for_call_sid(call_sid).tap do |vm|
+      vm.from = from
+      vm.phone_number = phone_number
+      
+      if vm.save
+        # all good, noop
+      else
+        Rails.logger.error "Unable to save voicemail: #{vm.errors.inspect}"
+      end
+    end
+    
     Twilio::TwiML::Response.new do |r|
       if phone_number.voicemail_greeting.present?
-        r.Say "You have reached the voice mailbox for #{phone_number.speakable_incoming_number}. Please leave a message after the beep."
-      else
         r.Play phone_number.voicemail_greeting
+      else
+        r.Say "You have reached the voice mailbox for #{phone_number.speakable_incoming_number}. Please leave a message after the beep."
       end
 
       record_options = {
         action: url_helpers.receive_voicemail_path, 
         method: :get, 
-        maxLength: 120, 
-        transcribe: true, 
-        transcribeCallback: url_helpers.receive_voicemail_transcription_path
+        maxLength: 120,
       }
+
       r.Record record_options
     end.text
   end
