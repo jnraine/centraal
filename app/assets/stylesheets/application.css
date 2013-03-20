@@ -15,3 +15,23 @@
 .phone-number .form {
   display: none;
 }
+
+.voicemails {
+  max-height: 150px;
+  overflow:scroll;
+  margin-bottom: 10px;
+}
+
+.voicemail:first-child {
+  border-top: 1px #ccc solid;
+}
+
+.voicemail {
+  border-bottom: 1px #ccc solid;
+  padding: 3px;
+  cursor: pointer;
+}
+
+.voicemail small {
+  color:#bbb;
+}

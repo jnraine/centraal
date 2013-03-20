@@ -1,7 +1,7 @@
 class PhoneNumber < ActiveRecord::Base
   attr_accessible :forwarding_number, :voicemail, :forwarding
 
-  has_many :voicemails
+  has_many :voicemails, order: "created_at DESC"
 
   validate :incoming_number, :unique => true
   validates_each :incoming_number, :forwarding_number do |record, attr, value|

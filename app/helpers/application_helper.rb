@@ -3,11 +3,13 @@ module ApplicationHelper
     icon(name: "pencil")
   end
 
-  def icon(options)
+  def icon(options, &block)
+    content = block_given? ? capture(&block) : ""
     classes = ["icon-#{options[:name]}", options[:class]].compact
     [
       "<i class=\"#{classes.join(" ")}\"></i>", 
-      options[:label]
+      options[:label],
+      content
     ].compact.join(" ").html_safe
   end
 
@@ -19,6 +21,14 @@ module ApplicationHelper
   def bootstrap_form_for(object, options = {}, &block)
     options[:builder] = BootstrapFormBuilder
     form_for(object, options, &block)
+  end
+
+  def flash_label(content, options = {})
+    classes = ["label"]
+    classes << "label-#{options.fetch(:type)}" if options.has_key?(:type)
+    classes << options.fetch(:class) if options.has_key?(:class)
+        
+    content_tag :span, content, :class => classes.join(" ")
   end
 
   def call_form

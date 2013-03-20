@@ -53,7 +53,7 @@ $(document).ready(function() {
 
   // Phone number expander
   $(".phone-number")
-    .find(".form").hide().end()
+    .find(".form").hide().show().end()
     .find(".incoming-number")
       .css({cursor: "pointer"})
       .click(function() {

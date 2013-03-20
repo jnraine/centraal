@@ -1,10 +1,43 @@
-<% if phone_number.voicemails.present? %>
-  <h5>Voicemail</h5>
-  <% phone_number.voicemails.each do |voicemail| %>
-    <div class="voicemail">
-      <%= link_to "#{phone_number.decorate_number(voicemail.from)} at #{voicemail.created_at.strftime("%B %-d, %Y at %l:%M%P")}", voicemail.recording_url %>
-    </div>
+<h5>Voicemail</h5>
+<div class="voicemails">
+  <% if phone_number.voicemails.present? %>
+    <% phone_number.voicemails.each do |voicemail| %>
+      <div class="voicemail">
+        <%= icon name: "play", class: "audio-control" %>
+        <%= content_tag :audio, "data-mark-as-read-path" => "/voicemails/#{voicemail.id}/mark_as_read" do %>
+          <source src="<%= play_voicemail_path(voicemail) %>" type="audio/mpeg">
+        <% end %>
+        <%= phone_number.decorate_number(voicemail.from) %>
+        <small>
+          <%= voicemail.pretty_created_at %>
+        </small>
+        <%= flash_label("new", type: "info", class: "unread-label") if voicemail.unread? %>
+      </div>
+    <% end %>
+  <% else %>
+    <em>No voicemails</em>
   <% end %>
-<% else %>
-  <em>No voicemails</em>
+</div>
+
+<%= content_for :inline_js do %>
+  <script>
+    $(".voicemail").click(function() {
+      var $voicemail = $(this);
+      var $audioControl = $voicemail.find(".audio-control");
+
+      var $otherAudioControls = $voicemail.parent().find(".voicemail").not($voicemail).find(".audio-control");
+      $otherAudioControls.pause();
+      console.log($otherAudioControls.length);
+      $audioControl.togglePlayback();
+    });
+
+    // Handle audio finished playing event
+    $(".voicemails audio").bind('ended', function() {
+      var $audio = $(this);
+      var $audioControl = $audio.parent().find(".audio-control");
+      $audioControl.swapIcon("pause", "play");
+      $.post($audio.attr("data-mark-as-read-path"));
+      $audio.parent().find(".unread-label").hide();
+    });
+  </script>
 <% end %>

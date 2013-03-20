@@ -12,4 +12,13 @@ describe Voicemail do
       Voicemail.for_call_sid("foo").should == existing
     end
   end
+
+  describe "#mark_as_read" do
+    it "sets read attribute to true and saves the record" do
+      voicemail = Voicemail.create!
+      voicemail.mark_as_read
+      voicemail.read.should be_true
+      voicemail.should be_persisted
+    end
+  end
 end

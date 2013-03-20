@@ -6,6 +6,9 @@ Centraal::Application.routes.draw do
   match "/dispatchers/process_owner_gather" => "dispatchers#process_owner_gather", :as => :process_owner_gather, :via => :post
   match "/dispatchers/receive_voicemail_greeting" => "dispatchers#receive_voicemail_greeting", :as => :receive_voicemail_greeting, :via => :post
 
+  match "/voicemails/:id/play" => "voicemails#play", as: "play_voicemail"
+  match "/voicemails/:id/mark_as_read" => "voicemails#mark_as_read", as: "mark_voicemail_as_read", via: :post
+
   resources :phone_numbers, :only => [:index, :edit, :update] do
     post "sync", :on => :collection
   end
