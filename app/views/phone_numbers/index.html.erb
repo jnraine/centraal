@@ -3,18 +3,21 @@
     <h4>
       <%= icon(name: "caret-right", class: "expand-icon") %>
       <span class="incoming-number"><%= phone_number.incoming_number %></span>
-      <%= button "#{icon(name: "phone")} Make Call".html_safe, "#", class: "btn btn-info btn-mini", data: {toggle: "popover", placement: "bottom", content: call_form } %>
     </h4>
 
-    <%= bootstrap_form_for phone_number, class: "form-horizontal" do |f| %>
-      <div class="form well">
+    <div class="form well">
+        <%= render partial: "call_form" %>
+        <hr>
+        <%= render partial: "voicemail_listing", locals: {phone_number: phone_number} %>
+        <hr>
+
+        <%= bootstrap_form_for phone_number, class: "form-horizontal" do |f| %>
           <%= f.text_field :forwarding_number %>
           <%= f.on_off :forwarding, labelled: true %>
           <%= f.on_off :voicemail, labelled: true %>
-          <%= render partial: "voicemail_listing", locals: {phone_number: phone_number} %>
           <%= f.save_changes %>
-      </div>
-    <% end %>
+        <% end %>
+    </div>
   <% end %>
 </div>
 
@@ -22,31 +25,20 @@
 
 <%= button icon(name: "refresh", label: "Sync Numbers"), sync_phone_numbers_path, method: :post, data: {"spin-on-click" => true, "click-text" => "Syncing..."} %>
 
-<!-- 
-  
-  Now, make view table-less. Put focus on incoming number and who it is 
-  assigned to. Upon click, reveal editable things like forwarding number 
-  and voicemail. 
-
-  Next, wire up the actual editing of the number. Once the edit page is 
-  no longer necessary, turn the show action into some kind of dashboard
-  for the incoming number. Some simple editable stuff, like forwarding
-  on or off, as well as a voicemail player, recent calls, and ability
-  to dial out from the web browser.
-
-  Question is, what should that page be modelled after? Doesn't have to
-  be a traditional phone — dialing is no longer necessary - but what
-  instead?
-
--->
 <% content_for :inline_js do %>
   <script>
     $(document).ready(function(){
-        Twilio.Device.setup("<%= TwilioWrapper.instance.client_token("bob") %>");
+        Twilio.Device.setup("<%= TwilioWrapper.instance.client_token(PhoneNumber.first.id) %>");
+        $("#hangup").hide();
         var connection = null;
+
+        $("#call-form").submit(function() {
+          $("#start-call").click();
+          return false;
+        });
         
         $(document).on("click", "#start-call", function() {
-            params = { "OutgoingNumber" : $("#tocall").first().val()};
+            params = {"OutgoingNumber" : $("#outgoing-number").first().val()};
             connection = Twilio.Device.connect(params);
         });
 
@@ -84,8 +76,8 @@
         });
          
         function toggleCallStatus(){
-            // $('#call').toggle();
-            // $('#hangup').toggle();
+            $('#start-call').toggle();
+            $('#hangup').toggle();
         }
     });
   </script>

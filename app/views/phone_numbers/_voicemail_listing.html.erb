@@ -1,4 +1,4 @@
-<h5>Voicemail</h5>
+<h5>Voicemail Messages</h5>
 <div class="voicemails">
   <% if phone_number.voicemails.present? %>
     <% phone_number.voicemails.each do |voicemail| %>
@@ -18,26 +18,3 @@
     <em>No voicemails</em>
   <% end %>
 </div>
-
-<%= content_for :inline_js do %>
-  <script>
-    $(".voicemail").click(function() {
-      var $voicemail = $(this);
-      var $audioControl = $voicemail.find(".audio-control");
-
-      var $otherAudioControls = $voicemail.parent().find(".voicemail").not($voicemail).find(".audio-control");
-      $otherAudioControls.pause();
-      console.log($otherAudioControls.length);
-      $audioControl.togglePlayback();
-    });
-
-    // Handle audio finished playing event
-    $(".voicemails audio").bind('ended', function() {
-      var $audio = $(this);
-      var $audioControl = $audio.parent().find(".audio-control");
-      $audioControl.swapIcon("pause", "play");
-      $.post($audio.attr("data-mark-as-read-path"));
-      $audio.parent().find(".unread-label").hide();
-    });
-  </script>
-<% end %>

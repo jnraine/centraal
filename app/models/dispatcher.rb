@@ -129,10 +129,11 @@ class Dispatcher
   end
 
   def connect_call
+    phone_number = PhoneNumber.find(from.gsub("client:", ""))
     Twilio::TwiML::Response.new do |r|
       r.Dial outgoing_number, {
         :action => url_helpers.conclude_call_path, 
-        "callerId" => PhoneNumber.first.incoming_number
+        "callerId" => phone_number.incoming_number
       }
     end.text
   end

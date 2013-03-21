@@ -4,7 +4,7 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
       form_content = "".html_safe
       form_content += label(field) if options.fetch(:labelled, false)
       form_content += @template.content_tag(:div, class: "controls") do
-        @template.content_tag :div, class: "switch switch-mini" do
+        @template.content_tag :div, class: "switch" do
           check_box field, checked: object.model.send(field)
         end
       end

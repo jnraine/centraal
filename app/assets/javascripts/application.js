@@ -65,4 +65,23 @@ $(document).ready(function() {
   setTimeout(function() { $(".alert").slideUp(); }, 5000);
 
   $("[data-toggle='popover']").popover({html: true});
+
+  $(".voicemail").click(function() {
+    var $voicemail = $(this);
+    var $audioControl = $voicemail.find(".audio-control");
+
+    var $otherAudioControls = $voicemail.parent().find(".voicemail").not($voicemail).find(".audio-control");
+    $otherAudioControls.pause();
+    console.log($otherAudioControls.length);
+    $audioControl.togglePlayback();
+  });
+
+  // Handle audio finished playing event
+  $(".voicemails audio").bind('ended', function() {
+    var $audio = $(this);
+    var $audioControl = $audio.parent().find(".audio-control");
+    $audioControl.swapIcon("pause", "play");
+    $.post($audio.attr("data-mark-as-read-path"));
+    $audio.parent().find(".unread-label").hide();
+  });
 });

@@ -1,6 +1,8 @@
 class DispatchersController < ApplicationController
   def receive_call
-    render :text => dispatcher.receive_call
+    response = dispatcher.receive_call
+    Rails.logger.info response
+    render :text => response
   end
 
   def conclude_call
