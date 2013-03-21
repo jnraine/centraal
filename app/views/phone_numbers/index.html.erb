@@ -1,25 +1,28 @@
-<div class="phone-number">
-  <% @phone_numbers.each do |phone_number| %>
-    <h4>
-      <%= icon(name: "caret-right", class: "expand-icon") %>
-      <span class="incoming-number"><%= phone_number.incoming_number %></span>
-    </h4>
+<% @phone_numbers.each do |phone_number| %>
+    <div class="phone-number">
+        <h4>
+          <%= icon(name: "caret-right", class: "expand-icon") %>
+          <span class="incoming-number"><%= phone_number.incoming_number %></span>
+        </h4>
 
-    <div class="form well">
-        <%= render partial: "call_form" %>
-        <hr>
-        <%= render partial: "voicemail_listing", locals: {phone_number: phone_number} %>
-        <hr>
+        <div class="details well">
+            <%= render partial: "call_form" %>
+            
+            <hr>
+            
+            <%= render partial: "voicemail_listing", locals: {phone_number: phone_number} %>
+            
+            <hr>
 
-        <%= bootstrap_form_for phone_number, class: "form-horizontal" do |f| %>
-          <%= f.text_field :forwarding_number %>
-          <%= f.on_off :forwarding, labelled: true %>
-          <%= f.on_off :voicemail, labelled: true %>
-          <%= f.save_changes %>
-        <% end %>
+            <%= bootstrap_form_for phone_number, class: "form-horizontal" do |f| %>
+              <%= f.text_field :forwarding_number %>
+              <%= f.on_off :forwarding, labelled: true %>
+              <%= f.on_off :voicemail, labelled: true %>
+              <%= f.save_changes %>
+            <% end %>
+        </div>
     </div>
-  <% end %>
-</div>
+<% end %>
 
 <br>
 

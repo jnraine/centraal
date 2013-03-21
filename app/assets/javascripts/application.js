@@ -53,14 +53,15 @@ $(document).ready(function() {
 
   // Phone number expander
   $(".phone-number")
-    .find(".form").hide().show().end()
+    .find(".details").hide().end()
     .find(".incoming-number")
       .css({cursor: "pointer"})
       .click(function() {
         $(this).closest(".phone-number")
-          .find(".form").slideToggle().end()
+          .find(".details").slideToggle().end()
           .find(".expand-icon").swapIcon("caret-down", "caret-right");
       });
+  $(".incoming-number").click(); // show all numbers for now
 
   setTimeout(function() { $(".alert").slideUp(); }, 5000);
 
