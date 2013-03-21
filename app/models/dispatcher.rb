@@ -20,6 +20,8 @@ class Dispatcher
       handle_call_from_owner
     elsif phone_number.forwarding?
       forward_call
+    elsif phone_number.connected_clients.present?
+      forward_call_to_client_only
     elsif phone_number.voicemail_on?
       record_voicemail
     else
@@ -125,6 +127,16 @@ class Dispatcher
     Twilio::TwiML::Response.new do |r|
       r.Dial action: url_helpers.conclude_call_path, method: :get, timeout: 10 do
         r.Number phone_number.forwarding_number
+        phone_number.connected_clients.each do |connected_client|
+          r.Client connected_client.identifier
+        end
+      end
+    end.text
+  end
+
+  def forward_call_to_client_only
+    Twilio::TwiML::Response.new do |r|
+      r.Dial action: url_helpers.conclude_call_path, method: :get, timeout: 10 do
         phone_number.connected_clients.each do |connected_client|
           r.Client connected_client.identifier
         end
