@@ -33,23 +33,16 @@
     $(document).ready(function(){
         <% client = PhoneNumber.first.client("js") %>
         Twilio.Device.setup("<%= client.token %>");
-        window.connection = null;
+        var connection = null;
+        var connectedWith = null;
         var callStatusUpdaterInterval = null;
-
-        setInterval(function() { console.log(connection.status()); }, 1000);
-
-        function updateStatus(message) {
-            $('#status').text(message);
-        }
-
-        function setStatusReady() {
-            showButton("start-call");
-            updateStatus("Ready to start call");
-        }
         
         // UI Fanciness
         $(document).on("click", "#start-call", function() {
-            params = {"OutgoingNumber" : $("#outgoing-number").first().val()};
+            var outgoingNumber = $("#outgoing-number").first().val();
+            params = {"OutgoingNumber" : outgoingNumber};
+            connectedWith = outgoingNumber;
+            updateStatus("Calling " + connectedWith + "...");
             connection = Twilio.Device.connect(params);
         });
 
@@ -61,6 +54,15 @@
           $("#start-call").click();
           return false;
         });
+
+        function updateStatus(message) {
+            $('#status').text(message);
+        }
+
+        function setStatusReady() {
+            showButton("start-call");
+            updateStatus("Ready to start call");
+        }
 
         // Twilio.Device callbacks
         Twilio.Device.ready(function (device) {
@@ -74,23 +76,22 @@
         });
      
         Twilio.Device.incoming(function (incomingConnection) {
-            var callFrom = incomingConnection.parameters.From;
-            updateStatus("Incoming call from " + callFrom + "...");
+            connectedWith = incomingConnection.parameters.From;
+            updateStatus("Incoming call from " + connectedWith + "...");
             showButton("answer");
             $("#answer").click(function() {
-                console.log("You just clicked answer!");
                 connection = incomingConnection;
-                console.log(incomingConnection.accept());
-                // startCallStatus(connection.parameters.From);
+                connection.accept();
             });
+        });
+     
+        Twilio.Device.offline(function (device) {
+            updateStatus("Offline");
+            hideButtons();
         });
 
         Twilio.Device.cancel(function (cancelledConnection) {
             setStatusReady();
-        });
-     
-        Twilio.Device.offline(function (device) {
-            updateStatus('Offline');
         });
      
         Twilio.Device.error(function (error) {
@@ -100,10 +101,8 @@
         });
      
         Twilio.Device.connect(function (conn) {
-            updateStatus("Successfully established call");
-            console.log("I just connected a call: ");
-            console.log(conn.parameters);
-            startCallStatus(conn.parameters.From);
+            console.log("let's set the call status to time the call");
+            startCallStatus();
             showButton("hangup");
         });
      
@@ -111,10 +110,10 @@
             stopCallStatus();
         });
 
-        function startCallStatus(connectedWith) {
+        function startCallStatus() {
             var callStartTime = new Date().getTime();
             callStatusUpdaterInterval = setInterval(function() {
-                var message = connectedWith + " — " + timerDisplay(callStartTime);
+                var message = "Connected — " + connectedWith + " — " + timerDisplay(callStartTime);
                 updateStatus(message);
             }, 500);
         }
@@ -124,6 +123,10 @@
             updateStatus("Call ended");
             setTimeout(setStatusReady, 2000);
             showButton("start-call");
+        }
+
+        function hideButtons() {
+            showButton("none-that-actually-exist");
         }
          
         function showButton(name){
