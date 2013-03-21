@@ -5,7 +5,7 @@ describe TwilioClient do
   let(:twilio_client) { create(:twilio_client, phone_number: phone_number) }
 
   it "belongs to a phone number" do
-    twilio_client = TwilioClient.new(client_type: :js)
+    twilio_client = TwilioClient.new
     twilio_client.phone_number = phone_number
     twilio_client.phone_number.should == phone_number
   end
@@ -16,9 +16,8 @@ describe TwilioClient do
   end
 
   it "has an identifier" do
-    twilio_client.client_type = "js"
     twilio_client.phone_number_id = 1
-    twilio_client.identifier.should == "1-js"
+    twilio_client.identifier.should == "1"
   end
 
   describe "#ping" do

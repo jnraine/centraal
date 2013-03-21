@@ -3,8 +3,8 @@ class TwilioClient < ActiveRecord::Base
   belongs_to :phone_number
 
   def self.for(identifier)
-    phone_number_id, client_type = identifier.split("-")
-    where(phone_number_id: phone_number_id, client_type: client_type).first
+    phone_number_id = identifier
+    where(phone_number_id: phone_number_id).first
   end
 
   def token
@@ -12,7 +12,7 @@ class TwilioClient < ActiveRecord::Base
   end
 
   def identifier
-    [phone_number_id, client_type].join("-")
+    phone_number_id
   end
 
   def ping
