@@ -9,6 +9,19 @@
             <%= render partial: "call_form" %>
             
             <hr>
+
+            <h5>Voicemail Greeting</h5>
+            <div class="voicemail-greeting">
+                <% if phone_number.voicemail_greeting.present? %>
+                    <%= icon name: "play", class: "audio-control icon-2x" %>
+                    <%= content_tag :audio do %>
+                      <source src="<%= phone_number.voicemail_greeting %>" type="audio/mpeg">
+                    <% end %>
+                <% else %>
+                    <em>Voicemail greeting not set</em>
+                <% end %>
+            </div>
+            <hr>
             
             <%= render partial: "voicemail_listing", locals: {phone_number: phone_number} %>
             

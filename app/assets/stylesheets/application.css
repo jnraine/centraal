@@ -39,3 +39,11 @@
 label {
   font-weight: bold;
 }
+
+.audio-control {
+  cursor: pointer;
+}
+
+.audio-control:hover {
+  color: #51a351;
+}

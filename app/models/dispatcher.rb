@@ -1,3 +1,4 @@
+
 class Dispatcher
   attr_reader :phone_number, :dial_call_status, :from, :call_sid, :outgoing_number, :digits, :recording_url, :recording_duration, :transcription_text
 
@@ -155,13 +156,17 @@ class Dispatcher
   end
 
   def receive_voicemail
-    voicemail = Voicemail.where(call_sid: call_sid).first
-    raise "Voicemail not found!" if voicemail.nil?
-    
-    voicemail.tap do |vm|
+    Voicemail.for_call_sid(call_sid).tap do |vm|
+      vm.from = from
+      vm.phone_number = phone_number
       vm.recording_url = recording_url
       vm.duration = recording_duration
-      vm.save
+      
+      if vm.save
+        # all good, noop
+      else
+        Rails.logger.error "Unable to save voicemail: #{vm.errors.inspect}"
+      end
     end
 
     hang_up
@@ -177,17 +182,6 @@ class Dispatcher
   end
 
   def record_voicemail
-    Voicemail.for_call_sid(call_sid).tap do |vm|
-      vm.from = from
-      vm.phone_number = phone_number
-      
-      if vm.save
-        # all good, noop
-      else
-        Rails.logger.error "Unable to save voicemail: #{vm.errors.inspect}"
-      end
-    end
-    
     Twilio::TwiML::Response.new do |r|
       if phone_number.voicemail_greeting.present?
         r.Play phone_number.voicemail_greeting

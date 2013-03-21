@@ -73,7 +73,6 @@ $(document).ready(function() {
 
     var $otherAudioControls = $voicemail.parent().find(".voicemail").not($voicemail).find(".audio-control");
     $otherAudioControls.pause();
-    console.log($otherAudioControls.length);
     $audioControl.togglePlayback();
   });
 
@@ -84,5 +83,19 @@ $(document).ready(function() {
     $audioControl.swapIcon("pause", "play");
     $.post($audio.attr("data-mark-as-read-path"));
     $audio.parent().find(".unread-label").hide();
+  });
+
+  // Voicemail greeting play
+  $(".voicemail-greeting").click(function() {
+    var $voicemailGreeting = $(this);
+    var $audioControl = $voicemailGreeting.find(".audio-control");
+    $audioControl.togglePlayback();
+    return false;
+  });
+
+  $(".voicemail-greeting audio").bind('ended', function() {
+    var $audio = $(this);
+    var $audioControl = $audio.parent().find(".audio-control");
+    $audioControl.swapIcon("pause", "play");
   });
 });
