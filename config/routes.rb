@@ -9,6 +9,8 @@ Centraal::Application.routes.draw do
   match "/voicemails/:id/play" => "voicemails#play", as: "play_voicemail"
   match "/voicemails/:id/mark_as_read" => "voicemails#mark_as_read", as: "mark_voicemail_as_read", via: :post
 
+  match "/client_ping/:id" => "twilio_clients#ping", as: "client_ping", via: :post
+
   resources :phone_numbers, :only => [:index, :edit, :update] do
     post "sync", :on => :collection
   end

@@ -5,9 +5,11 @@ describe Dispatcher do
   let(:bobs_office) { "+15551234567" }
   let(:customer_joe)  { "+15557654321" }
 
+  let(:phone_number) { FactoryGirl.create(:phone_number, incoming_number: bobs_office, forwarding_number: bobs_mobile) }
+
   let(:twilio_params) do
     {
-      "To" => bobs_office,
+      "To" => phone_number.incoming_number,
       "DialCallStatus" => "completed",
       "CallSid" => "unique sid",
       "From" => customer_joe
@@ -38,6 +40,13 @@ describe Dispatcher do
       end
 
       dispatcher.call_from_owner?.should be_true
+    end
+  end
+
+  describe "#forward_call" do
+    it "gives me the XML I want to see" do
+      dispatcher.phone_number.connect_client("js")
+      dispatcher.forward_call.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Dial action=\"/dispatchers/conclude_call\" method=\"get\" timeout=\"10\"><Number>+15559876543</Number><Client>1-js</Client></Dial></Response>"
     end
   end
 end

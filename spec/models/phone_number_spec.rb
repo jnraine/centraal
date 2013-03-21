@@ -65,4 +65,23 @@ describe PhoneNumber do
       PhoneNumber.for_incoming_number(bobs_office).incoming_number.should == bobs_office
     end
   end
+
+  describe "#connect_client" do
+    it "takes a client type, creates an associated client, and pings the client" do
+      phone = create(:phone_number)
+      phone.connect_client("js")
+      phone.clients.should have(1).item
+      phone.clients.first.client_type.should == "js"
+    end
+  end
+
+  describe "connected_clients" do
+    it "returns all clients that have pinged in the last 5 minutes" do
+      phone = create(:phone_number)
+      phone.clients.build(client_type: "ios", last_ping: 10.minutes.ago)
+      phone.connect_client("js")
+      phone.clients.should have(2).item
+      phone.connected_clients.should have(1).item
+    end
+  end
 end

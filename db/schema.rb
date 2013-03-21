@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130311082243) do
+ActiveRecord::Schema.define(:version => 20130321050458) do
 
   create_table "phone_numbers", :force => true do |t|
     t.boolean  "forwarding",         :default => false
@@ -22,6 +22,14 @@ ActiveRecord::Schema.define(:version => 20130311082243) do
     t.string   "email"
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
+  end
+
+  create_table "twilio_clients", :force => true do |t|
+    t.datetime "last_ping"
+    t.string   "client_type"
+    t.integer  "phone_number_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "voicemails", :force => true do |t|

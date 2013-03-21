@@ -28,6 +28,9 @@ class Dispatcher
   end
 
   def conclude_call
+    # need to handled concluded call initiated by web browser...
+    # here's what the conclude params look like on a call that completed: {"AccountSid"=>"AC91a48b008deae010bf5c6f8982f79ff8", "ApplicationSid"=>"APc806364dd06a91015773cd5e2f36247f", "CallStatus"=>"completed", "DialCallSid"=>"CA7f45c929557dd9989a1b815e1f0d74c4", "To"=>"", "Called"=>"", "DialCallStatus"=>"completed", "Direction"=>"inbound", "ApiVersion"=>"2010-04-01", "Caller"=>"client:1", "CallSid"=>"CAdeffd0b414ed583edc4896ac3fb4235a", "DialCallDuration"=>"7", "From"=>"client:1"}
+    # Gotta handle when I call someone from a browser and they don't answer
     if call_not_completed?
       record_voicemail
     else 
@@ -120,11 +123,12 @@ class Dispatcher
 
   def forward_call
     Twilio::TwiML::Response.new do |r|
-      r.Dial phone_number.forwarding_number, {
-        :action => url_helpers.conclude_call_path,
-        :method => :get, 
-        :timeout => 10
-      }
+      r.Dial :action => url_helpers.conclude_call_path, :method => :get, :timeout => 10 do
+        r.Number phone_number.forwarding_number
+        phone_number.connected_clients.each do |connected_client|
+          r.Client connected_client.identifier
+        end
+      end
     end.text
   end
 

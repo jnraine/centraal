@@ -31,15 +31,15 @@
 <% content_for :inline_js do %>
   <script>
     $(document).ready(function(){
-        Twilio.Device.setup("<%= TwilioWrapper.instance.client_token(PhoneNumber.first.id) %>");
+        <% client = PhoneNumber.first.client("js") %>
+        Twilio.Device.setup("<%= client.token %>");
         $("#hangup").hide();
         var connection = null;
 
-        $("#call-form").submit(function() {
-          $("#start-call").click();
-          return false;
-        });
+        // Twilio.Connection callbacks
+
         
+        // UI Fanciness
         $(document).on("click", "#start-call", function() {
             params = {"OutgoingNumber" : $("#outgoing-number").first().val()};
             connection = Twilio.Device.connect(params);
@@ -48,8 +48,20 @@
         $(document).on("click", "#hangup", function() {  
             Twilio.Device.disconnectAll();
         });
-     
+
+        $("#call-form").submit(function() {
+          $("#start-call").click();
+          return false;
+        });
+        
+        // Twilio.Device callbacks
         Twilio.Device.ready(function (device) {
+            var pingClient = function() {
+                $.post("<%= "/client_ping/#{client.identifier}" %>");
+            }
+
+            setInterval(pingClient, 120000);
+            pingClient();
             $('#status').text('Ready to start call');
         });
      

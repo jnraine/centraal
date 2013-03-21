@@ -2,6 +2,8 @@ class PhoneNumber < ActiveRecord::Base
   attr_accessible :forwarding_number, :voicemail, :forwarding
 
   has_many :voicemails, order: "created_at DESC"
+  has_many :clients, class_name: TwilioClient
+  has_many :connected_clients, class_name: TwilioClient, :conditions => proc { "last_ping > '#{5.minutes.ago}'" }
 
   validate :incoming_number, :unique => true
   validates_each :incoming_number, :forwarding_number do |record, attr, value|
@@ -68,6 +70,22 @@ class PhoneNumber < ActiveRecord::Base
 
   def forwarding_number=(number)
     super self.class.format_number(number)
+  end
+
+  def connect_client(type)
+    client = create_client(type)
+    client.ping
+    client.save
+  end
+
+  def client(type)
+    clients.where(client_type: type).first || create_client(type)
+  end
+
+  def create_client(type)
+    client = clients.build(client_type: type)
+    client.save
+    client
   end
 
   class NullPhoneNumber
