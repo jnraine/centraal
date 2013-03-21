@@ -3,5 +3,6 @@
   <%= telephone_field_tag "number", "", placeholder: "e.g., (123) 456-7890", id: "outgoing-number" %>
   <br>
   <%= button "#{icon(name: "phone")} Call".html_safe, "#", class: "btn btn-success", id: "start-call" %>
+  <%= button "#{icon(name: "phone")} Answer".html_safe, "#", class: "btn btn-success", id: "answer" %>
   <%= button "#{icon(name: "phone")} Hang Up".html_safe, "#", class: "btn btn-danger", id: "hangup" %>
 <% end %>

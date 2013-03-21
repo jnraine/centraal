@@ -33,11 +33,19 @@
     $(document).ready(function(){
         <% client = PhoneNumber.first.client("js") %>
         Twilio.Device.setup("<%= client.token %>");
-        $("#hangup").hide();
-        var connection = null;
+        window.connection = null;
+        var callStatusUpdaterInterval = null;
 
-        // Twilio.Connection callbacks
+        setInterval(function() { console.log(connection.status()); }, 1000);
 
+        function updateStatus(message) {
+            $('#status').text(message);
+        }
+
+        function setStatusReady() {
+            showButton("start-call");
+            updateStatus("Ready to start call");
+        }
         
         // UI Fanciness
         $(document).on("click", "#start-call", function() {
@@ -53,46 +61,91 @@
           $("#start-call").click();
           return false;
         });
-        
+
         // Twilio.Device callbacks
         Twilio.Device.ready(function (device) {
             var pingClient = function() {
                 $.post("<%= "/client_ping/#{client.identifier}" %>");
             }
 
-            setInterval(pingClient, 120000);
+            setInterval(pingClient, 120000); // ping server every 2 minutes
             pingClient();
-            $('#status').text('Ready to start call');
+            setStatusReady();
         });
      
-        Twilio.Device.incoming(function (conn) {
-            if (confirm('Accept incoming call from ' + conn.parameters.From + '?')){
-                connection=conn;
-                conn.accept();
-            }
+        Twilio.Device.incoming(function (incomingConnection) {
+            var callFrom = incomingConnection.parameters.From;
+            updateStatus("Incoming call from " + callFrom + "...");
+            showButton("answer");
+            $("#answer").click(function() {
+                console.log("You just clicked answer!");
+                connection = incomingConnection;
+                console.log(incomingConnection.accept());
+                // startCallStatus(connection.parameters.From);
+            });
+        });
+
+        Twilio.Device.cancel(function (cancelledConnection) {
+            setStatusReady();
         });
      
         Twilio.Device.offline(function (device) {
-            $('#status').text('Offline');
+            updateStatus('Offline');
         });
      
         Twilio.Device.error(function (error) {
-            $('#status').text(error);
+            console.log("A Twilio error occurred");
+            console.log(error);
+            updateStatus(error);
         });
      
         Twilio.Device.connect(function (conn) {
-            $('#status').text("Successfully established call");
-            toggleCallStatus();
+            updateStatus("Successfully established call");
+            console.log("I just connected a call: ");
+            console.log(conn.parameters);
+            startCallStatus(conn.parameters.From);
+            showButton("hangup");
         });
      
         Twilio.Device.disconnect(function (conn) {
-            $('#status').text("Call ended");
-            toggleCallStatus();
+            stopCallStatus();
         });
+
+        function startCallStatus(connectedWith) {
+            var callStartTime = new Date().getTime();
+            callStatusUpdaterInterval = setInterval(function() {
+                var message = connectedWith + " — " + timerDisplay(callStartTime);
+                updateStatus(message);
+            }, 500);
+        }
+
+        function stopCallStatus() {
+            clearInterval(callStatusUpdaterInterval);
+            updateStatus("Call ended");
+            setTimeout(setStatusReady, 2000);
+            showButton("start-call");
+        }
          
-        function toggleCallStatus(){
-            $('#start-call').toggle();
-            $('#hangup').toggle();
+        function showButton(name){
+            $('#start-call').hide();
+            $('#hangup').hide();
+            $('#answer').hide();
+            $('#' + name).show();
+        }
+
+        function timerDisplay(startTime) {
+            var duration = secondsSinceTime(startTime);
+            var minutes = Math.floor(duration / 60);
+            var seconds = duration % 60;
+            if(seconds.toString().length == 1) {
+                seconds = "0" + seconds;
+            }
+            return minutes + ":" + seconds;
+        }
+
+        function secondsSinceTime(time) {
+            var seconds = (new Date().getTime() - time) / 1000;
+            return Math.floor(seconds);
         }
     });
   </script>
