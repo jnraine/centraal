@@ -11,37 +11,37 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130321050458) do
+ActiveRecord::Schema.define(version: 20130321050458) do
 
-  create_table "phone_numbers", :force => true do |t|
-    t.boolean  "forwarding",         :default => false
-    t.boolean  "voicemail",          :default => false
+  create_table "phone_numbers", force: true do |t|
+    t.boolean  "forwarding",         default: false
+    t.boolean  "voicemail",          default: false
     t.string   "forwarding_number"
     t.string   "incoming_number"
     t.string   "voicemail_greeting"
     t.string   "email"
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
   end
 
-  create_table "twilio_clients", :force => true do |t|
+  create_table "twilio_clients", force: true do |t|
     t.datetime "last_ping"
     t.string   "client_type"
     t.integer  "phone_number_id"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
-  create_table "voicemails", :force => true do |t|
+  create_table "voicemails", force: true do |t|
     t.string   "recording_url"
     t.string   "from"
     t.integer  "duration"
     t.string   "call_sid"
     t.integer  "phone_number_id"
     t.text     "transcription"
-    t.boolean  "read",            :default => false
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
+    t.boolean  "read",            default: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
   end
 
 end

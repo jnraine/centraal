@@ -3,9 +3,9 @@ class PhoneNumber < ActiveRecord::Base
 
   has_many :voicemails, order: "created_at DESC"
   has_many :clients, class_name: TwilioClient
-  has_many :connected_clients, class_name: TwilioClient, :conditions => proc { "last_ping > '#{5.minutes.ago}'" }
+  has_many :connected_clients, class_name: TwilioClient, conditions: proc { "last_ping > '#{5.minutes.ago}'" }
 
-  validate :incoming_number, :unique => true
+  validate :incoming_number, unique: true
   validates_each :incoming_number, :forwarding_number do |record, attr, value|
     record.errors.add(attr, "is invalid. Try something like 123-555-1234.") unless valid_number?(value)
   end
@@ -17,7 +17,7 @@ class PhoneNumber < ActiveRecord::Base
   end
 
   def self.find_or_create_for_incoming_number(incoming_number)
-    where(:incoming_number => incoming_number).first || create_with_incoming_number!(incoming_number)
+    where(incoming_number: incoming_number).first || create_with_incoming_number!(incoming_number)
   end
 
   def self.create_with_incoming_number!(incoming_number)

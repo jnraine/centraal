@@ -32,6 +32,6 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
   def save_changes(options = {})
     classes = ["btn", "btn-primary"]
     classes << "btn-#{options[:size]}" if options.has_key?(:size)
-    submit "Save Changes", {:class => classes.join(" ")}.merge(options)
+    submit "Save Changes", {class: classes.join(" ")}.merge(options)
   end
 end

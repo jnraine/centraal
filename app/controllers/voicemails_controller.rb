@@ -7,9 +7,9 @@ class VoicemailsController < ApplicationController
   def mark_as_read
     @voicemail = Voicemail.find(params[:id])
     if @voicemail.mark_as_read
-      render :text => "Marked as read"
+      render text: "Marked as read"
     else
-      render :text => "A problem occurred"
+      render text: "A problem occurred"
     end
   end
 end

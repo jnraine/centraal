@@ -123,7 +123,7 @@ class Dispatcher
 
   def forward_call
     Twilio::TwiML::Response.new do |r|
-      r.Dial :action => url_helpers.conclude_call_path, :method => :get, :timeout => 10 do
+      r.Dial action: url_helpers.conclude_call_path, method: :get, timeout: 10 do
         r.Number phone_number.forwarding_number
         phone_number.connected_clients.each do |connected_client|
           r.Client connected_client.identifier
@@ -136,7 +136,7 @@ class Dispatcher
     phone_number = PhoneNumber.find(from.gsub("client:", ""))
     Twilio::TwiML::Response.new do |r|
       r.Dial outgoing_number, {
-        :action => url_helpers.conclude_call_path, 
+        action: url_helpers.conclude_call_path, 
         "callerId" => phone_number.incoming_number
       }
     end.text

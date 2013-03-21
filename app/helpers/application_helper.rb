@@ -14,7 +14,7 @@ module ApplicationHelper
   end
 
   def button(label, url, options = {})
-    options = {:class => "btn"}.merge(options)
+    options = {class: "btn"}.merge(options)
     link_to label, url, options
   end
 
@@ -28,7 +28,7 @@ module ApplicationHelper
     classes << "label-#{options.fetch(:type)}" if options.has_key?(:type)
     classes << options.fetch(:class) if options.has_key?(:class)
         
-    content_tag :span, content, :class => classes.join(" ")
+    content_tag :span, content, class: classes.join(" ")
   end
 
   def call_form

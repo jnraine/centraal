@@ -16,7 +16,7 @@ describe PhoneNumber do
       TwilioWrapper.instance.should_receive(:incoming_phone_numbers).and_return([bobs_office, amys_office])
       existing_number = PhoneNumber.new.tap {|p| p.incoming_number = bobs_office; p.save! }
       PhoneNumber.sync_numbers
-      PhoneNumber.where(:incoming_number => bobs_office).count.should == 1
+      PhoneNumber.where(incoming_number: bobs_office).count.should == 1
     end
   end
 
