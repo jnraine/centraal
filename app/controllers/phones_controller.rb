@@ -1,6 +1,12 @@
 class PhonesController < ApplicationController
+  before_filter :require_admin, except: [:show, :update]
+
   def index
     @phones = Phone.scoped.decorate
+  end
+
+  def show
+    @phone = Phone.find(params[:id])
   end
 
   def edit
@@ -8,7 +14,7 @@ class PhonesController < ApplicationController
   end
 
   def update
-    @phone = Phone.find(params[:id]).decorate
+    @phone = Phone.find(params[:id]).decorate # I'm a security hole...
 
     if @phone.update_attributes(params[:phone])
       flash[:notice] = "#{@phone.incoming_number} updated"
@@ -31,6 +37,10 @@ class PhonesController < ApplicationController
       flash[:notice] = "#{difference} phones synced from Twilio"
     end
 
-    redirect_to phone_numbers_path
+    redirect_to phones_path
+  end
+
+  def zero
+    redirect_to front_door_redirect unless current_user.phones.zero?
   end
 end

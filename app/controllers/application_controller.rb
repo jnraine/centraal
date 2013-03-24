@@ -3,13 +3,22 @@ class ApplicationController < ActionController::Base
 
   before_filter :require_login
 
-  def redirect_to_phone
-    raise "I'm not implemented yet"
-    redirect_to phone_path(current_user.phones.first)
+  def front_door_redirect
+    if current_user.phones.present?
+      redirect_to phone_path(current_user.phones.first)
+    elsif current_user.admin?
+      redirect_to phones_path
+    else
+      redirect_to zero_phones_path
+    end
   end
 
   private
   
+  def require_admin
+    redirect_to front_door_redirect unless current_user.admin?
+  end
+
   def require_login
     redirect_to cas_login_path if current_user.blank?
   end

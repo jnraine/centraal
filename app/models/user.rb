@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   attr_accessible :login
 
   has_many :sessions
+  has_many :phones
 
   def self.for_session_id(session_id)
     session = Session.where(:id => session_id).first
@@ -26,6 +27,14 @@ class User < ActiveRecord::Base
 
   def valid_session
     sessions.last || sessions.create
+  end
+
+  def admin?
+    admin_whitelist.include? login
+  end
+
+  def admin_whitelist
+    %w{jraine}
   end
 
   def permitted?

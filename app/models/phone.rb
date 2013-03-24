@@ -78,7 +78,7 @@ class Phone < ActiveRecord::Base
   end
 
   def client
-    clients.first || create_client
+    clients.first || clients.create
   end
 
   class NullPhone

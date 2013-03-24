@@ -15,7 +15,8 @@ Centraal::Application.routes.draw do
 
   resources :phones, only: [:index, :edit, :update, :show] do
     post "sync", on: :collection
+    get "zero", on: :collection
   end
 
-  root to: "application#redirect_to_phone"
+  root to: "application#front_door_redirect"
 end

@@ -12,7 +12,7 @@
  *= require_self
  */
 
-.phone-number .form {
+.phone .form {
   display: none;
 }
 

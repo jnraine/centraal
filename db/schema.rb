@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(:version => 20130324013943) do
     t.string   "incoming_number"
     t.string   "voicemail_greeting"
     t.string   "email"
+    t.integer  "user_id"
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
   end
@@ -50,11 +51,11 @@ ActiveRecord::Schema.define(:version => 20130324013943) do
     t.string   "from"
     t.integer  "duration"
     t.string   "call_sid"
-    t.integer  "phone_number_id"
+    t.integer  "phone_id"
     t.text     "transcription"
-    t.boolean  "read",            :default => false
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
+    t.boolean  "read",          :default => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
   end
 
 end

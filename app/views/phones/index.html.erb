@@ -1,5 +1,5 @@
 <% @phones.each do |phone| %>
-    <div class="phone-number">
+    <div class="phone">
         <h4>
           <%= icon(name: "caret-right", class: "expand-icon") %>
           <span class="incoming-number"><%= phone.incoming_number %></span>
@@ -18,7 +18,7 @@
                       <source src="<%= phone.voicemail_greeting %>" type="audio/mpeg">
                     <% end %>
                 <% else %>
-                    <em>Voicemail greeting not set</em>
+                    <em>Call <%= phone.incoming_number %> from your forwarding number to record a greeting.</em>
                 <% end %>
             </div>
             <hr>
@@ -44,7 +44,7 @@
 <% content_for :inline_js do %>
   <script>
     $(document).ready(function(){
-        <% client = Phone.first.client("js") %>
+        <% client = Phone.first.present? ? Phone.first.client : OpenStruct.new %>
         Twilio.Device.setup("<%= client.token %>");
         var connection = null;
         var connectedWith = null;

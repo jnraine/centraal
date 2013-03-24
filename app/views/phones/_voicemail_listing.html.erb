@@ -1,13 +1,13 @@
 <h5>Voicemail Messages</h5>
 <div class="voicemails">
-  <% if phone_number.voicemails.present? %>
-    <% phone_number.voicemails.each do |voicemail| %>
+  <% if phone.voicemails.present? %>
+    <% phone.voicemails.each do |voicemail| %>
       <div class="voicemail">
         <%= icon name: "play", class: "audio-control" %>
         <%= content_tag :audio, "data-mark-as-read-path" => "/voicemails/#{voicemail.id}/mark_as_read" do %>
           <source src="<%= play_voicemail_path(voicemail) %>" type="audio/mpeg">
         <% end %>
-        <%= phone_number.decorate_number(voicemail.from) %>
+        <%= phone.decorate_number(voicemail.from) %>
         <small>
           <%= voicemail.pretty_created_at %>
         </small>

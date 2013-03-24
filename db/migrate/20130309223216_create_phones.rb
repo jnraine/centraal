@@ -7,6 +7,7 @@ class CreatePhones < ActiveRecord::Migration
       t.string :incoming_number
       t.string :voicemail_greeting
       t.string :email
+      t.references :user
       t.timestamps
     end
   end

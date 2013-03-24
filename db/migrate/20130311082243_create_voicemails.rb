@@ -5,7 +5,7 @@ class CreateVoicemails < ActiveRecord::Migration
       t.string :from
       t.integer :duration
       t.string :call_sid
-      t.references :phone_number
+      t.references :phone
       t.text :transcription
       t.boolean :read, default: false
       t.timestamps
