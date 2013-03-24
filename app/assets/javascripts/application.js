@@ -16,86 +16,86 @@
 //= require_tree .
 
 $(document).ready(function() {
-  $("[data-spin-on-click]").click(function() {
-    $(this).find("i[class|='icon']").addClass("icon-spin");
-  });
+    $("[data-spin-on-click]").click(function() {
+        $(this).find("i[class|='icon']").addClass("icon-spin");
+    });
 
-  $("[data-click-text]").click(function() {
-    var $link = $(this);
-    var spinText = $link.attr("data-click-text");
-    var $children = $link.children();
-    $link
-      .text(" " + spinText)
-      .prepend($children);
-  });
+    $("[data-click-text]").click(function() {
+        var $link = $(this);
+        var spinText = $link.attr("data-click-text");
+        var $children = $link.children();
+        $link
+            .text(" " + spinText)
+            .prepend($children);
+    });
 
-  $(".field_with_errors").closest(".control-group").addClass("error");
+    $(".field_with_errors").closest(".control-group").addClass("error");
 
-  // Edit on click magic...a bit ugly
-  $(".edit-on-click")
-    .find(".field").hide().end()
-    .find(".display")
-      .css({cursor: "pointer"})
-      .click(function() {
-        $(this).closest(".edit-on-click")
-          .find(".field")
-            .show()
-            .find("input").first()
-              .focus().end()
-              .blur(function() {
-              $(this).closest(".field").hide().closest(".edit-on-click")
-                .find(".display").show();
-              })
-            .end()
-          .end()
-          .find(".display").hide();
-      });
+    // Edit on click magic...a bit ugly
+    $(".edit-on-click")
+        .find(".field").hide().end()
+        .find(".display")
+            .css({cursor: "pointer"})
+            .click(function() {
+                $(this).closest(".edit-on-click")
+                    .find(".field")
+                        .show()
+                        .find("input").first()
+                            .focus().end()
+                            .blur(function() {
+                            $(this).closest(".field").hide().closest(".edit-on-click")
+                                .find(".display").show();
+                            })
+                        .end()
+                    .end()
+                    .find(".display").hide();
+            });
 
-  // Phone number expander
-  $(".phone-number")
-    .find(".details").hide().end()
-    .find(".incoming-number")
-      .css({cursor: "pointer"})
-      .click(function() {
-        $(this).closest(".phone-number")
-          .find(".details").slideToggle().end()
-          .find(".expand-icon").swapIcon("caret-down", "caret-right");
-      });
-  $(".incoming-number").click(); // show all numbers for now
+    // Phone number expander
+    $(".phone-number")
+        .find(".details").hide().end()
+        .find(".incoming-number")
+            .css({cursor: "pointer"})
+            .click(function() {
+                $(this).closest(".phone-number")
+                    .find(".details").slideToggle().end()
+                    .find(".expand-icon").swapIcon("caret-down", "caret-right");
+            });
+    $(".incoming-number").click(); // show all numbers for now
 
-  setTimeout(function() { $(".alert").slideUp(); }, 5000);
+    setTimeout(function() { $(".alert").slideUp(); }, 5000);
 
-  $("[data-toggle='popover']").popover({html: true});
+    $("[data-toggle='popover']").popover({html: true});
 
-  $(".voicemail").click(function() {
-    var $voicemail = $(this);
-    var $audioControl = $voicemail.find(".audio-control");
+    $(".voicemail").click(function() {
+        var $voicemail = $(this);
+        var $audioControl = $voicemail.find(".audio-control");
 
-    var $otherAudioControls = $voicemail.parent().find(".voicemail").not($voicemail).find(".audio-control");
-    $otherAudioControls.pause();
-    $audioControl.togglePlayback();
-  });
+        var $otherAudioControls = $voicemail.parent().find(".voicemail").not($voicemail).find(".audio-control");
+        $otherAudioControls.pause();
+        $audioControl.togglePlayback();
+    });
 
-  // Handle audio finished playing event
-  $(".voicemails audio").bind('ended', function() {
-    var $audio = $(this);
-    var $audioControl = $audio.parent().find(".audio-control");
-    $audioControl.swapIcon("pause", "play");
-    $.post($audio.attr("data-mark-as-read-path"));
-    $audio.parent().find(".unread-label").hide();
-  });
+    // Handle audio finished playing event
+    $(".voicemails audio").bind('ended', function() {
+        var $audio = $(this);
+        var $audioControl = $audio.parent().find(".audio-control");
+        $audioControl.swapIcon("pause", "play");
+        $.post($audio.attr("data-mark-as-read-path"));
+        $audio.parent().find(".unread-label").hide();
+    });
 
-  // Voicemail greeting play
-  $(".voicemail-greeting").click(function() {
-    var $voicemailGreeting = $(this);
-    var $audioControl = $voicemailGreeting.find(".audio-control");
-    $audioControl.togglePlayback();
-    return false;
-  });
+    // Voicemail greeting play
+    $(".voicemail-greeting").click(function() {
+        var $voicemailGreeting = $(this);
+        var $audioControl = $voicemailGreeting.find(".audio-control");
+        $audioControl.togglePlayback();
+        return false;
+    });
 
-  $(".voicemail-greeting audio").bind('ended', function() {
-    var $audio = $(this);
-    var $audioControl = $audio.parent().find(".audio-control");
-    $audioControl.swapIcon("pause", "play");
-  });
+    $(".voicemail-greeting audio").bind('ended', function() {
+        var $audio = $(this);
+        var $audioControl = $audio.parent().find(".audio-control");
+        $audioControl.swapIcon("pause", "play");
+    });
 });

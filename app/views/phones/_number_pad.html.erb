@@ -1,0 +1,12 @@
+<div class="keypad row-fluid">
+    <% keypad.each do |key_row| %>
+        <div class="key-row">
+            <% key_row.each do |digit, letters| %>
+                <div class="key">
+                    <span class="digit"><%= digit %></span>
+                    <span class="letters"><%= letters %></span>
+                </div>
+            <% end %>
+        </div>
+    <% end %>
+</div>

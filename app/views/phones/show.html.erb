@@ -1,0 +1,42 @@
+<div class="phone">
+    <h4>
+      <%= icon(name: "caret-right", class: "expand-icon") %>
+      <span class="incoming-number"><%= @phone.incoming_number %></span>
+    </h4>
+
+    <div class="details well">
+        <%= render partial: "call_form" %>
+        
+        <hr>
+
+        <h5>Voicemail Greeting</h5>
+        <div class="voicemail-greeting">
+            <% if @phone.voicemail_greeting.present? %>
+                <%= icon name: "play", class: "audio-control icon-2x" %>
+                <%= content_tag :audio do %>
+                  <source src="<%= @phone.voicemail_greeting %>" type="audio/mpeg">
+                <% end %>
+            <% else %>
+                <em>Call <%= @phone.incoming_number %> from your forwarding number to record a greeting.</em>
+            <% end %>
+        </div>
+        <hr>
+        
+        <%= render partial: "voicemail_listing", locals: {phone: @phone} %>
+        
+        <hr>
+
+        <%= bootstrap_form_for @phone, class: "form-horizontal" do |f| %>
+          <%= f.text_field :forwarding_number %>
+          <%= f.on_off :forwarding, labelled: true %>
+          <%= f.on_off :voicemail, labelled: true %>
+          <%= f.save_changes %>
+        <% end %>
+    </div>
+</div>
+
+<% content_for :inline_js do %>
+  <script>
+    connectPhone("<%= @phone.client.token %>", "<%= "/client_ping/#{@phone.client.identifier}" %>");
+  </script>
+<% end %>

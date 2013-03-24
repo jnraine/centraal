@@ -6,7 +6,7 @@ class PhonesController < ApplicationController
   end
 
   def show
-    @phone = Phone.find(params[:id])
+    @phone = Phone.find(params[:id]).decorate
   end
 
   def edit

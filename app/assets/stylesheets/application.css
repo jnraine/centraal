@@ -47,3 +47,31 @@ label {
 .audio-control:hover {
   color: #51a351;
 }
+
+.key-row {
+  width: 200px;
+}
+
+.key {
+  float: left;
+  width: 50px;
+  height: 25px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 1px;
+  cursor: pointer;
+}
+
+.key:hover {
+  background-color: #eee;
+}
+
+.key .letters {
+  font-size: 0.7em;
+}
+
+.key .digit {
+  font-size: 1.2em;
+  font-weight:bold;
+}
