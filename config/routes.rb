@@ -1,4 +1,6 @@
 Centraal::Application.routes.draw do
+  match '/auth/:provider/callback' => 'sessions#create'
+  
   match "/dispatchers/receive_call" => "dispatchers#receive_call", as: :receive_call
   match "/dispatchers/conclude_call" => "dispatchers#conclude_call", as: :conclude_call
   match "/dispatchers/receive_voicemail" => "dispatchers#receive_voicemail", as: :receive_voicemail
@@ -15,5 +17,5 @@ Centraal::Application.routes.draw do
     post "sync", on: :collection
   end
 
-  root to: redirect("/phone_numbers")
+  root to: "application#redirect_to_phone"
 end
