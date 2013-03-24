@@ -1,8 +1,10 @@
+<h3>
+    <span class="incoming-number"><%= @phone.incoming_number %></span>
+</h3>
 <div class="phone row-fluid">
-
     <div class="phone-controls span4">
         <h4>
-            <span class="incoming-number"><%= @phone.incoming_number %></span>
+            <span class="incoming-number">Browser Phone</span>
         </h4>
         <%= render partial: "call_form" %>
     </div>
@@ -20,14 +22,13 @@
                 <em>Call <%= @phone.incoming_number %> from your forwarding number to record a greeting.</em>
             <% end %>
         </div>
-        <hr>
         <%= render partial: "voicemail_listing", locals: {phone: @phone} %>
     </div>
 
     <div class="span4">
         <h4>Settings</h4>
-        <%= bootstrap_form_for @phone, class: "form-horizontal" do |f| %>
-          <%= f.text_field :forwarding_number %>
+        <%= bootstrap_form_for @phone, url: phone_path(@phone, format: "json"), class: "form-horizontal", remote: true do |f| %>
+          <%= f.text_field :forwarding_number, data: {"format-phone-number" => true} %>
           <%= f.on_off :forwarding, labelled: true %>
           <%= f.on_off :voicemail, labelled: true %>
         <% end %>

@@ -16,12 +16,16 @@ class PhonesController < ApplicationController
   def update
     @phone = Phone.find(params[:id]).decorate # I'm a security hole...
 
-    if @phone.update_attributes(params[:phone])
-      flash[:notice] = "#{@phone.incoming_number} updated"
-      redirect_to phones_path
-    else
-      flash[:error] = "Problem saving #{@phone.incoming_number}"
-      render :edit
+    respond_to do |format|
+      if @phone.update_attributes(params[:phone])
+        flash[:notice] = "#{@phone.incoming_number} updated"
+        format.html { redirect_to phones_path }
+        format.json { render json: {phone: @phone, flash: flash} }
+      else
+        flash[:error] = "Problem saving #{@phone.incoming_number}"
+        format.html { render :edit }
+        format.json { render json: {phone: @phone, flash: flash} }
+      end
     end
   end
 

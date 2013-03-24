@@ -131,7 +131,7 @@ function connectPhone(token, pingPath) {
 }
 
 $(document).ready(function() {
-    $("#outgoing-number")
+    $("[data-format-phone-number]")
         .keydown(function(event) {
             // if you want to be fancy, don't let them press non-digits
         })

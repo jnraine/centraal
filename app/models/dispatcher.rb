@@ -22,10 +22,8 @@ class Dispatcher
       forward_call
     elsif phone.connected_clients.present?
       forward_call_to_client_only
-    elsif phone.voicemail_on?
-      record_voicemail
     else
-      unavailable_number
+      send_to_voicemail
     end
   end
 
@@ -34,7 +32,7 @@ class Dispatcher
     # here's what the conclude params look like on a call that completed: {"AccountSid"=>"AC91a48b008deae010bf5c6f8982f79ff8", "ApplicationSid"=>"APc806364dd06a91015773cd5e2f36247f", "CallStatus"=>"completed", "DialCallSid"=>"CA7f45c929557dd9989a1b815e1f0d74c4", "To"=>"", "Called"=>"", "DialCallStatus"=>"completed", "Direction"=>"inbound", "ApiVersion"=>"2010-04-01", "Caller"=>"client:1", "CallSid"=>"CAdeffd0b414ed583edc4896ac3fb4235a", "DialCallDuration"=>"7", "From"=>"client:1"}
     # Gotta handle when I call someone from a browser and they don't answer
     if call_not_completed?
-      record_voicemail
+      send_to_voicemail
     else 
       hang_up
     end
@@ -178,6 +176,14 @@ class Dispatcher
     end
 
     ""
+  end
+
+  def send_to_voicemail
+    if phone.voicemail_on?
+      record_voicemail
+    else
+      unavailable_number
+    end
   end
 
   def record_voicemail

@@ -1,4 +1,6 @@
 class DispatchersController < ApplicationController
+  skip_before_filter :require_login
+
   def receive_call
     response = dispatcher.receive_call
     Rails.logger.info response

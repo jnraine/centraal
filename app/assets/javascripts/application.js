@@ -98,4 +98,64 @@ $(document).ready(function() {
         var $audioControl = $audio.parent().find(".audio-control");
         $audioControl.swapIcon("pause", "play");
     });
+
+    $(".edit_phone")
+        .change(function() {
+            $(this).submit();
+        })
+        .bind('ajax:success', function(event, data, status) {
+            $.each(data.flash, function(index, element) {
+                if(element[0] == "error") {
+                    flashError(element[1]);
+                }
+            });
+            console.log(data.flash);
+        })
+        .bind('ajax:error', function(xhr, status, error) { console.log("it failed"); flashError("A problem occurred while saving record"); });
+
+    $(".switch").on("switch-change", function (e, data) {
+        $(data.el).parents("form").change();
+    });
+
+    if(navigator.userAgent.match(/iPhone/)) {
+        $(".phone-controls")
+            .find("#call-form")
+                .slideUp()
+            .end()
+            .append("<div><em>The browser-based phone is not supported by your device</em></div>");
+    }
 });
+
+function flashSuccess(message) {
+    flash(message, "success");
+}
+
+function flashInfo(message) {
+    flash(message, "info");
+}
+
+function flashWarning(message) {
+    flash(message, "warning");
+}
+
+function flashError(message) {
+    flash(message, "error");
+}
+
+function flash(message, type) {
+    var $alert = $(".content .alert");
+    var typeClass = "alert-" + type;
+    if($alert.length === 0) {
+        $alert = $("<div class='alert'></div>").hide();
+        $(".content").prepend($alert);
+    }
+
+    $alert
+        .attr('class', '')
+        .addClass("alert")
+        .addClass(typeClass)
+        .html(message)
+        .slideDown();
+
+    setTimeout(function() { $alert.slideUp(); }, 5000);
+}

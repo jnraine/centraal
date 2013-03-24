@@ -1,13 +1,13 @@
 class Voicemail < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   
-  attr_accessible :call_sid, :from, :phone_number
+  attr_accessible :call_sid, :from, :phone
 
   def self.for_call_sid(call_sid)
     where(call_sid: call_sid).limit(1).first || create(call_sid: call_sid)
   end
 
-  belongs_to :phone_number
+  belongs_to :phone
 
   def pretty_created_at
     if created_at > 12.hours.ago

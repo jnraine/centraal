@@ -1,6 +1,6 @@
 <%= form_tag '', id: "call-form" do %>
   <p id="status"></p>
-  <%= telephone_field_tag "number", "", placeholder: "e.g., (123) 456-7890", id: "outgoing-number" %>
+  <%= telephone_field_tag "number", "", placeholder: "e.g., (123) 456-7890", id: "outgoing-number", data: {"format-phone-number" => true} %>
   <br>
   <%= render partial: "number_pad" %>
   <br>
