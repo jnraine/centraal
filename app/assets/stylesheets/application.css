@@ -90,3 +90,7 @@ label {
   min-width: 190px;
   text-align: center;
 }
+
+#call-form .btn {
+  display:none;
+}
