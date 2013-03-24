@@ -45,6 +45,15 @@ class PhonesController < ApplicationController
   end
 
   def zero
-    redirect_to front_door_redirect unless current_user.phones.zero?
+    redirect_to root_path unless current_user.phones.zero?
+  end
+
+  def user
+    if current_user.phones.present?
+      @phone = current_user.phones.first.decorate
+      render :show
+    else
+      redirect_to front_door_redirect
+    end
   end
 end

@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   def front_door_redirect
     if current_user.phones.present?
-      redirect_to phone_path(current_user.phones.first)
+      redirect_to user_phone_path
     elsif current_user.admin?
       redirect_to phones_path
     else
