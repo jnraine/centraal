@@ -1,9 +1,8 @@
-
 class Dispatcher
-  attr_reader :phone_number, :dial_call_status, :from, :call_sid, :outgoing_number, :digits, :recording_url, :recording_duration, :transcription_text
+  attr_reader :phone, :dial_call_status, :from, :call_sid, :outgoing_number, :digits, :recording_url, :recording_duration, :transcription_text
 
   def initialize(params)
-    @phone_number = PhoneNumber.for_incoming_number(params["To"])
+    @phone = Phone.for_incoming_number(params["To"])
     @dial_call_status = params["DialCallStatus"]
     @call_sid = params["CallSid"]
     @from = params["From"]
@@ -19,11 +18,11 @@ class Dispatcher
       connect_call
     elsif call_from_owner?
       handle_call_from_owner
-    elsif phone_number.forwarding?
+    elsif phone.forwarding?
       forward_call
-    elsif phone_number.connected_clients.present?
+    elsif phone.connected_clients.present?
       forward_call_to_client_only
-    elsif phone_number.voicemail_on?
+    elsif phone.voicemail_on?
       record_voicemail
     else
       unavailable_number
@@ -60,7 +59,7 @@ class Dispatcher
   end
 
   def call_from_owner?
-    phone_number.forwarding_number == from
+    phone.forwarding_number == from
   end
 
   def handle_call_from_owner
@@ -94,22 +93,22 @@ class Dispatcher
   end
 
   def play_voicemail_greeting
-    if phone_number.voicemail_greeting.present?
+    if phone.voicemail_greeting.present?
       Twilio::TwiML::Response.new do |r|
-        r.Play phone_number.voicemail_greeting
+        r.Play phone.voicemail_greeting
         r.Redirect url_helpers.receive_call_path, method: :get
       end.text
     else
       Twilio::TwiML::Response.new do |r|
-        r.Say "No voicemail greeting found for #{phone_number.speakable_incoming_number}"
+        r.Say "No voicemail greeting found for #{phone.speakable_incoming_number}"
         r.Redirect url_helpers.receive_call_path, method: :get
       end.text
     end
   end
 
   def receive_voicemail_greeting
-    phone_number.voicemail_greeting = recording_url
-    phone_number.save
+    phone.voicemail_greeting = recording_url
+    phone.save
 
     Twilio::TwiML::Response.new do |r|
       r.Say "Your new voicemail greeting has been saved."
@@ -127,8 +126,8 @@ class Dispatcher
   def forward_call
     Twilio::TwiML::Response.new do |r|
       r.Dial action: url_helpers.conclude_call_path, method: :get, timeout: 10 do
-        r.Number phone_number.forwarding_number
-        phone_number.connected_clients.each do |connected_client|
+        r.Number phone.forwarding_number
+        phone.connected_clients.each do |connected_client|
           r.Client connected_client.identifier
         end
       end
@@ -138,7 +137,7 @@ class Dispatcher
   def forward_call_to_client_only
     Twilio::TwiML::Response.new do |r|
       r.Dial action: url_helpers.conclude_call_path, method: :get, timeout: 10 do
-        phone_number.connected_clients.each do |connected_client|
+        phone.connected_clients.each do |connected_client|
           r.Client connected_client.identifier
         end
       end
@@ -146,11 +145,11 @@ class Dispatcher
   end
 
   def connect_call
-    phone_number = PhoneNumber.find(from.gsub("client:", ""))
+    phone = Phone.find(from.gsub("client:", ""))
     Twilio::TwiML::Response.new do |r|
       r.Dial outgoing_number, {
         action: url_helpers.conclude_call_path, 
-        "callerId" => phone_number.incoming_number
+        "callerId" => phone.incoming_number
       }
     end.text
   end
@@ -158,7 +157,7 @@ class Dispatcher
   def receive_voicemail
     Voicemail.for_call_sid(call_sid).tap do |vm|
       vm.from = from
-      vm.phone_number = phone_number
+      vm.phone = phone
       vm.recording_url = recording_url
       vm.duration = recording_duration
       
@@ -183,10 +182,10 @@ class Dispatcher
 
   def record_voicemail
     Twilio::TwiML::Response.new do |r|
-      if phone_number.voicemail_greeting.present?
-        r.Play phone_number.voicemail_greeting
+      if phone.voicemail_greeting.present?
+        r.Play phone.voicemail_greeting
       else
-        r.Say "You have reached the voice mailbox for #{phone_number.speakable_incoming_number}. Please leave a message after the beep."
+        r.Say "You have reached the voice mailbox for #{phone.speakable_incoming_number}. Please leave a message after the beep."
       end
 
       record_options = {
@@ -201,7 +200,7 @@ class Dispatcher
 
   def unavailable_number
     Twilio::TwiML::Response.new do |r|
-      r.Say "#{phone_number.speakable_incoming_number}, is not available at this time. Sorry for any inconvenience. Good-bye."
+      r.Say "#{phone.speakable_incoming_number}, is not available at this time. Sorry for any inconvenience. Good-bye."
     end.text
   end
 end

@@ -1,8 +1,8 @@
-<% @phone_numbers.each do |phone_number| %>
+<% @phones.each do |phone| %>
     <div class="phone-number">
         <h4>
           <%= icon(name: "caret-right", class: "expand-icon") %>
-          <span class="incoming-number"><%= phone_number.incoming_number %></span>
+          <span class="incoming-number"><%= phone.incoming_number %></span>
         </h4>
 
         <div class="details well">
@@ -12,10 +12,10 @@
 
             <h5>Voicemail Greeting</h5>
             <div class="voicemail-greeting">
-                <% if phone_number.voicemail_greeting.present? %>
+                <% if phone.voicemail_greeting.present? %>
                     <%= icon name: "play", class: "audio-control icon-2x" %>
                     <%= content_tag :audio do %>
-                      <source src="<%= phone_number.voicemail_greeting %>" type="audio/mpeg">
+                      <source src="<%= phone.voicemail_greeting %>" type="audio/mpeg">
                     <% end %>
                 <% else %>
                     <em>Voicemail greeting not set</em>
@@ -23,11 +23,11 @@
             </div>
             <hr>
             
-            <%= render partial: "voicemail_listing", locals: {phone_number: phone_number} %>
+            <%= render partial: "voicemail_listing", locals: {phone: phone} %>
             
             <hr>
 
-            <%= bootstrap_form_for phone_number, class: "form-horizontal" do |f| %>
+            <%= bootstrap_form_for phone, class: "form-horizontal" do |f| %>
               <%= f.text_field :forwarding_number %>
               <%= f.on_off :forwarding, labelled: true %>
               <%= f.on_off :voicemail, labelled: true %>
@@ -39,12 +39,12 @@
 
 <br>
 
-<%= button icon(name: "refresh", label: "Sync Numbers"), sync_phone_numbers_path, method: :post, data: {"spin-on-click" => true, "click-text" => "Syncing..."} %>
+<%= button icon(name: "refresh", label: "Sync Numbers"), sync_phones_path, method: :post, data: {"spin-on-click" => true, "click-text" => "Syncing..."} %>
 
 <% content_for :inline_js do %>
   <script>
     $(document).ready(function(){
-        <% client = PhoneNumber.first.client("js") %>
+        <% client = Phone.first.client("js") %>
         Twilio.Device.setup("<%= client.token %>");
         var connection = null;
         var connectedWith = null;

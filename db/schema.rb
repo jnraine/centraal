@@ -13,7 +13,7 @@
 
 ActiveRecord::Schema.define(:version => 20130324013943) do
 
-  create_table "phone_numbers", :force => true do |t|
+  create_table "phones", :force => true do |t|
     t.boolean  "forwarding",         :default => false
     t.boolean  "voicemail",          :default => false
     t.string   "forwarding_number"
@@ -32,10 +32,9 @@ ActiveRecord::Schema.define(:version => 20130324013943) do
 
   create_table "twilio_clients", :force => true do |t|
     t.datetime "last_ping"
-    t.string   "client_type"
-    t.integer  "phone_number_id"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.integer  "phone_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "users", :force => true do |t|

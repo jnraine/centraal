@@ -1,4 +1,4 @@
-class PhoneNumberDecorator < Draper::Decorator
+class PhoneDecorator < Draper::Decorator
   delegate_all
 
   def incoming_number

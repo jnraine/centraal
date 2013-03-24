@@ -1,6 +1,6 @@
-class CreatePhoneNumbers < ActiveRecord::Migration
+class CreatePhones < ActiveRecord::Migration
   def change
-    create_table :phone_numbers do |t|
+    create_table :phones do |t|
       t.boolean :forwarding, default: false
       t.boolean :voicemail, default: false
       t.string :forwarding_number

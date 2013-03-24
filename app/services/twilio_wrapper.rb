@@ -34,7 +34,7 @@ class TwilioWrapper
     setting "auth_token"
   end
 
-  def incoming_phone_numbers
+  def incoming_numbers
     twilio_numbers = account.incoming_phone_numbers.list
     twilio_numbers.delete_if {|number| number.voice_application_sid != app_sid }
     twilio_numbers.map(&:phone_number)

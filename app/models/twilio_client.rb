@@ -1,10 +1,9 @@
 class TwilioClient < ActiveRecord::Base
-  attr_accessible :client_type, :last_ping
-  belongs_to :phone_number
+  attr_accessible :last_ping
+  belongs_to :phone
 
   def self.for(identifier)
-    phone_number_id = identifier
-    where(phone_number_id: phone_number_id).first
+    where(phone_id: identifier).first
   end
 
   def token
@@ -12,7 +11,7 @@ class TwilioClient < ActiveRecord::Base
   end
 
   def identifier
-    phone_number_id
+    phone_id.to_s
   end
 
   def ping

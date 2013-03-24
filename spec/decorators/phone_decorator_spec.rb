@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PhoneNumberDecorator do
+describe PhoneDecorator do
   let(:messages) do
     {
       voicemail: false,
@@ -8,8 +8,8 @@ describe PhoneNumberDecorator do
     }
   end
 
-  let(:phone_number) { mock(:phone_number, messages) }
-  let(:decorator) { PhoneNumberDecorator.new(phone_number) }
+  let(:phone) { mock(:phone, messages) }
+  let(:decorator) { PhoneDecorator.new(phone) }
 
   describe "#prettify_number" do
     it "takes an E.164 formatter phone number and makes it pretty" do

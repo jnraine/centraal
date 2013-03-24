@@ -13,7 +13,7 @@ Centraal::Application.routes.draw do
 
   match "/client_ping/:id" => "twilio_clients#ping", as: "client_ping", via: :post
 
-  resources :phone_numbers, only: [:index, :edit, :update] do
+  resources :phones, only: [:index, :edit, :update, :show] do
     post "sync", on: :collection
   end
 

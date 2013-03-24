@@ -5,11 +5,11 @@ describe Dispatcher do
   let(:bobs_office) { "+15551234567" }
   let(:customer_joe)  { "+15557654321" }
 
-  let(:phone_number) { FactoryGirl.create(:phone_number, incoming_number: bobs_office, forwarding_number: bobs_mobile) }
+  let(:phone) { FactoryGirl.create(:phone, incoming_number: bobs_office, forwarding_number: bobs_mobile) }
 
   let(:twilio_params) do
     {
-      "To" => phone_number.incoming_number,
+      "To" => phone.incoming_number,
       "DialCallStatus" => "completed",
       "CallSid" => "unique sid",
       "From" => customer_joe
@@ -33,7 +33,7 @@ describe Dispatcher do
     end
 
     it "returns true when 'from' number matches forwarding number for incoming number" do
-      PhoneNumber.new.tap do |pn| 
+      Phone.new.tap do |pn| 
         pn.incoming_number = bobs_office
         pn.forwarding_number = bobs_mobile
         pn.save!
@@ -45,8 +45,8 @@ describe Dispatcher do
 
   describe "#forward_call" do
     it "gives me the XML I want to see" do
-      dispatcher.phone_number.connect_client("js")
-      dispatcher.forward_call.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Dial action=\"/dispatchers/conclude_call\" method=\"get\" timeout=\"10\"><Number>+15559876543</Number><Client>1-js</Client></Dial></Response>"
+      dispatcher.phone.connect_client
+      dispatcher.forward_call.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Dial action=\"/dispatchers/conclude_call\" method=\"get\" timeout=\"10\"><Number>+15559876543</Number><Client>1</Client></Dial></Response>"
     end
   end
 end

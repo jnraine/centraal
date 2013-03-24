@@ -1,4 +1,4 @@
-class PhoneNumber < ActiveRecord::Base
+class Phone < ActiveRecord::Base
   attr_accessible :forwarding_number, :voicemail, :forwarding
 
   has_many :voicemails, order: "created_at DESC"
@@ -11,8 +11,8 @@ class PhoneNumber < ActiveRecord::Base
   end
 
   def self.sync_numbers
-    TwilioWrapper.instance.incoming_phone_numbers.each do |incoming_phone_number|
-      find_or_create_for_incoming_number(incoming_phone_number)
+    TwilioWrapper.instance.incoming_numbers.each do |incoming_number|
+      find_or_create_for_incoming_number(incoming_number)
     end
   end
 
@@ -21,18 +21,18 @@ class PhoneNumber < ActiveRecord::Base
   end
 
   def self.create_with_incoming_number!(incoming_number)
-    new.tap do |phone_number|
-      phone_number.incoming_number = incoming_number
-      phone_number.save!
+    new.tap do |phone|
+      phone.incoming_number = incoming_number
+      phone.save!
     end
   end
 
-  def self.for_incoming_number(incoming_phone_number)
-    PhoneNumber.where(incoming_number: incoming_phone_number).first || PhoneNumber.null_object(incoming_number: incoming_phone_number)
+  def self.for_incoming_number(incoming_number)
+    Phone.where(incoming_number: incoming_number).first || Phone.null_object(incoming_number: incoming_number)
   end
 
   def self.null_object(attributes)
-    NullPhoneNumber.new(attributes)
+    NullPhone.new(attributes)
   end
 
   def self.speakable_number(number)
@@ -72,23 +72,16 @@ class PhoneNumber < ActiveRecord::Base
     super self.class.format_number(number)
   end
 
-  def connect_client(type)
-    client = create_client(type)
+  def connect_client
+    client = clients.create
     client.ping
-    client.save
   end
 
-  def client(type)
-    clients.where(client_type: type).first || create_client(type)
+  def client
+    clients.first || create_client
   end
 
-  def create_client(type)
-    client = clients.build(client_type: type)
-    client.save
-    client
-  end
-
-  class NullPhoneNumber
+  class NullPhone
     attr_reader :incoming_number
 
     def initialize(attributes)
@@ -96,7 +89,7 @@ class PhoneNumber < ActiveRecord::Base
     end
 
     def speakable_incoming_number
-      PhoneNumber.speakable_number(incoming_number)
+      Phone.speakable_number(incoming_number)
     end
 
     def forwarding
