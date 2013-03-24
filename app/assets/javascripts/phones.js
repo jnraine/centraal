@@ -137,8 +137,10 @@ $(document).ready(function() {
         })
         .keyup(function() {
             var $digitDisplay = $(this);
-            var formattedNumber = formatNumber($digitDisplay.val());
-            $digitDisplay.val(formattedNumber);
+            if($digitDisplay.caretPosition() == $digitDisplay.val().length) {
+                var formattedNumber = formatNumber($digitDisplay.val());
+                $digitDisplay.val(formattedNumber);
+            }
         });
 });
 

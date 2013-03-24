@@ -1,15 +1,15 @@
-<div class="phone">
-    <h4>
-      <%= icon(name: "caret-right", class: "expand-icon") %>
-      <span class="incoming-number"><%= @phone.incoming_number %></span>
-    </h4>
+<div class="phone row-fluid">
 
-    <div class="details well">
+    <div class="phone-controls span4">
+        <h4>
+            <span class="incoming-number"><%= @phone.incoming_number %></span>
+        </h4>
         <%= render partial: "call_form" %>
-        
-        <hr>
+    </div>
 
-        <h5>Voicemail Greeting</h5>
+    <div class="span4">
+        <h4>Voicemail</h4>
+        <h5>Greeting</h5>
         <div class="voicemail-greeting">
             <% if @phone.voicemail_greeting.present? %>
                 <%= icon name: "play", class: "audio-control icon-2x" %>
@@ -21,16 +21,15 @@
             <% end %>
         </div>
         <hr>
-        
         <%= render partial: "voicemail_listing", locals: {phone: @phone} %>
-        
-        <hr>
+    </div>
 
+    <div class="span4">
+        <h4>Settings</h4>
         <%= bootstrap_form_for @phone, class: "form-horizontal" do |f| %>
           <%= f.text_field :forwarding_number %>
           <%= f.on_off :forwarding, labelled: true %>
           <%= f.on_off :voicemail, labelled: true %>
-          <%= f.save_changes %>
         <% end %>
     </div>
 </div>

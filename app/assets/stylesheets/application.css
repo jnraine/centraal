@@ -49,6 +49,7 @@ label {
 }
 
 .key-row {
+  margin: 0 auto;
   width: 200px;
 }
 
@@ -74,4 +75,18 @@ label {
 .key .digit {
   font-size: 1.2em;
   font-weight:bold;
+}
+
+#outgoing-number {
+  width: 176px;
+  height: 30px;
+  font-size:1.2em;
+  font-weight: bold;
+  background-color: transparent;
+}
+
+.phone-controls {
+  float: left;
+  min-width: 190px;
+  text-align: center;
 }
