@@ -130,6 +130,10 @@ function connectPhone(token, pingPath) {
     }
 }
 
+function nothingInFocus() {
+    return $(":focus").length === 0;
+}
+
 $(document).ready(function() {
     $("[data-format-phone-number]")
         .keydown(function(event) {
@@ -140,6 +144,32 @@ $(document).ready(function() {
             if($digitDisplay.caretPosition() == $digitDisplay.val().length) {
                 var formattedNumber = formatNumber($digitDisplay.val());
                 $digitDisplay.val(formattedNumber);
+            }
+        });
+
+    // Capture keystrokes and send to keypad
+    $(document)
+        .keypress(function(event){
+            var keymap = {48: "0", 49: "1", 50: "2", 51: "3", 52: "4", 53: "5", 54: "6", 55: "7", 56: "8", 57: "9", 42: "*", 35: "#"};
+            var character = keymap[event.which];
+            if(nothingInFocus() && typeof character != "undefined") {
+                $(".digit").filter(function() {
+                    return $(this).text() === character;
+                }).click();
+            } else {
+                console.log(event.which);
+                event.preventDefault();
+            }
+        })
+        .keyup(function(event) {
+            console.log("Anything in focus? " + nothingInFocus());
+            console.log("What keycode is it? " + event.keyCode);
+            event.preventDefault();
+            if(nothingInFocus() && event.keyCode == 8) {
+                $("#outgoing-number").val(function(index, value){
+                    return value.substr(0, value.length-1);
+                });
+                event.preventDefault();
             }
         });
 });
