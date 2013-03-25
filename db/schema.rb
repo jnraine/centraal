@@ -11,20 +11,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130324013943) do
+ActiveRecord::Schema.define(:version => 20130325210951) do
 
   create_table "phones", :force => true do |t|
-    t.boolean  "forwarding",                       :default => false
-    t.boolean  "voicemail",                        :default => false
-    t.boolean  "voicemail_notification_via_email", :default => false
-    t.boolean  "voicemail_notification_via_sms",   :default => false
+    t.boolean  "forwarding",         :default => false
+    t.boolean  "voicemail",          :default => false
+    t.boolean  "sms_notifications",  :default => false
     t.string   "forwarding_number"
     t.string   "incoming_number"
     t.string   "voicemail_greeting"
     t.string   "email"
     t.integer  "user_id"
-    t.datetime "created_at",                                          :null => false
-    t.datetime "updated_at",                                          :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
   end
 
   create_table "sessions", :force => true do |t|
@@ -32,6 +31,20 @@ ActiveRecord::Schema.define(:version => 20130324013943) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "shortened_urls", :force => true do |t|
+    t.integer  "owner_id"
+    t.string   "owner_type", :limit => 20
+    t.string   "url",                                     :null => false
+    t.string   "unique_key", :limit => 10,                :null => false
+    t.integer  "use_count",                :default => 0, :null => false
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
+  end
+
+  add_index "shortened_urls", ["owner_id", "owner_type"], :name => "index_shortened_urls_on_owner_id_and_owner_type"
+  add_index "shortened_urls", ["unique_key"], :name => "index_shortened_urls_on_unique_key", :unique => true
+  add_index "shortened_urls", ["url"], :name => "index_shortened_urls_on_url"
 
   create_table "twilio_clients", :force => true do |t|
     t.datetime "last_ping"

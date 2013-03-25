@@ -18,14 +18,12 @@ class PhonesController < ApplicationController
 
     respond_to do |format|
       if @phone.update_attributes(params[:phone])
-        flash[:notice] = "#{@phone.incoming_number} updated"
-        format.html { redirect_to phones_path }
-        format.json { render json: {phone: @phone, flash: flash} }
+        flash.now[:notice] = "#{@phone.incoming_number} updated"
       else
-        flash[:error] = "Problem saving #{@phone.incoming_number}"
-        format.html { render :edit }
-        format.json { render json: {phone: @phone, flash: flash} }
+        flash.now[:error] = "Problem saving #{@phone.incoming_number}"
       end
+
+      format.json { render json: {phone: @phone, flash: flash, errors: @phone.errors.messages} }
     end
   end
 

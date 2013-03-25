@@ -156,15 +156,9 @@ $(document).ready(function() {
                 $(".digit").filter(function() {
                     return $(this).text() === character;
                 }).click();
-            } else {
-                console.log(event.which);
-                event.preventDefault();
             }
         })
         .keyup(function(event) {
-            console.log("Anything in focus? " + nothingInFocus());
-            console.log("What keycode is it? " + event.keyCode);
-            event.preventDefault();
             if(nothingInFocus() && event.keyCode == 8) {
                 $("#outgoing-number").val(function(index, value){
                     return value.substr(0, value.length-1);

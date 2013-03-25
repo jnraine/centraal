@@ -12,8 +12,22 @@ class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def text_field(name, *args)
-    label(name) + super(name, *args)
+    @template.content_tag :div, class: "control-group" do 
+      content = "".html_safe
+      content += label(name, class: "control-label")
+      content += @template.content_tag :div, class: "controls" do
+        super(name, *args) + @template.content_tag(:span, "", class: "help-inline")
+      end
+    end
   end
+
+  # <div class="control-group error">
+  #   <label class="control-label" for="inputError">Input with error</label>
+  #   <div class="controls">
+  #     <input type="text" id="inputError">
+  #     <span class="help-inline">Please correct the error</span>
+  #   </div>
+  # </div>
 
   def edit_on_click_text_field(name, options = {})
     @template.content_tag :div, class: "edit-on-click" do

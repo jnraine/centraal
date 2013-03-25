@@ -1,6 +1,5 @@
 class Phone < ActiveRecord::Base
-
-  attr_accessible :forwarding_number, :voicemail, :forwarding, :voicemail_notification_via_email, :voicemail_notification_via_sms
+  attr_accessible :forwarding_number, :voicemail, :forwarding, :sms_notifications
 
   has_many :voicemails, order: "created_at DESC"
   has_many :clients, class_name: TwilioClient
@@ -8,7 +7,7 @@ class Phone < ActiveRecord::Base
 
   validate :incoming_number, unique: true
   validates_each :incoming_number, :forwarding_number do |record, attr, value|
-    record.errors.add(attr, "is invalid. Try something like 123-555-1234.") unless valid_number?(value) or value.blank?
+    record.errors.add(attr, "is invalid. Try something like (123) 555-1234.") unless valid_number?(value) or value.blank?
   end
 
   def self.sync_numbers
@@ -83,18 +82,18 @@ class Phone < ActiveRecord::Base
   end
 
   def notify_user_of_voicemail(voicemail)
-    send_voicemail_notification_via_email(voicemail) if voicemail_notification_via_email
-    send_voicemail_notification_via_sms(voicemail) if voicemail_notification_via_sms
-  end
-
-  def send_voicemail_notification_via_email(voicemail)
-
+    send_voicemail_notification_via_sms(voicemail) if sms_notifications
   end
 
   def send_voicemail_notification_via_sms(voicemail)
-    url = Rails.application.routes.url_helpers.play_voicemail_url(voicemail)
-    message = "New voicemail from #{voicemail.from}. Listen here: #{url}"
+    short_url = shorten_url(voicemail.recording_url)
+    message = "New voicemail from #{voicemail.from}. Listen here: #{short_url}"
     TwilioWrapper.instance.send_sms(from: incoming_number, to: forwarding_number, body: message)
+  end
+
+  # This method shouldn't live here. No way bro.
+  def shorten_url(url)
+    Rails.application.routes.url_helpers.shortener_translate_url(Shortener::ShortenedUrl.generate(url))
   end
 
   class NullPhone

@@ -94,3 +94,12 @@ label {
 #call-form .btn {
   display:none;
 }
+
+.save-notice {
+  display:none;
+}
+
+.error-notice {
+  display:none;
+  color: #b94a48;
+}

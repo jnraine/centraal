@@ -99,19 +99,57 @@ $(document).ready(function() {
         $audioControl.swapIcon("pause", "play");
     });
 
+    function flashSaveNotice() {
+        $notice = $(".save-notice");
+        $notice.fadeIn();
+        setTimeout(function() { $notice.fadeOut(); }, 1000);
+    }
+
+    function flashErrorNotice() {
+        $notice = $(".error-notice");
+        $notice.fadeIn();
+        setTimeout(function() { $notice.fadeOut(); }, 1000);
+    }
+
+    function highlightFieldsWithErrors($form, errors) {
+        for(var fieldName in errors) {
+            var $field = $form.find("#phone_" + fieldName);
+            $field
+                .parents(".control-group")
+                    .first().addClass("error")
+                .end()
+                .parent()
+                    .find(".help-inline").text(errors[fieldName]);
+        }
+    }
+
+    function clearErrorsFromFields($form) {
+        $form
+            .find(".control-group").removeClass("error").end()
+            .find(".help-inline").text("");
+    }
+
     $(".edit_phone")
         .change(function() {
             $(this).submit();
         })
         .bind('ajax:success', function(event, data, status) {
+            var $form = $(this);
             $.each(data.flash, function(index, element) {
                 if(element[0] == "error") {
-                    flashError(element[1]);
+                    flashErrorNotice();
+                    highlightFieldsWithErrors($form, data.errors);
+                } else {
+                    flashSaveNotice();
+                    clearErrorsFromFields($form)
                 }
             });
-            console.log(data.flash);
         })
-        .bind('ajax:error', function(xhr, status, error) { console.log("it failed"); flashError("A problem occurred while saving record"); });
+        .bind('ajax:error', function(xhr, status, error) {
+            var $notice = $(".error-notice");
+            $notice.fadeIn();
+            setTimeout(function() { $notice.fadeOut(); }, 1000);
+        });
 
     $(".switch").on("switch-change", function (e, data) {
         $(data.el).parents("form").change();

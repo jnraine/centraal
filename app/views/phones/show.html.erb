@@ -26,13 +26,16 @@
     </div>
 
     <div class="span4">
-        <h3>Settings</h3>
+        <h3>
+          Settings
+          <small class="save-notice"><%= icon(name: "ok-sign", label: "Saved!") %></small>
+          <small class="error-notice"><%= icon(name: "warning-sign", label: "Error!") %></small>
+        </h3>
         <%= bootstrap_form_for @phone, url: phone_path(@phone, format: "json"), class: "form-horizontal", remote: true do |f| %>
           <%= f.text_field :forwarding_number, data: {"format-phone-number" => true} %>
           <%= f.on_off :forwarding, labelled: true %>
           <%= f.on_off :voicemail, labelled: true %>
-          <%= f.on_off :voicemail_notification_via_email, labelled: true %>
-          <%= f.on_off :voicemail_notification_via_sms, labelled: true %>
+          <%= f.on_off :sms_notifications, labelled: true %>
         <% end %>
     </div>
 </div>

@@ -8,11 +8,7 @@ Twilio-powered browser softphone with call forwarding and voicemail.
 - Add email sign up
     1. Admin assigns new phone to user by entering their email address.
     2. User receives email with link, clicks link, logs in, phone automatically associated with their account.
-- Add new voicemail notifications
-    - via Email
-    - via SMS
-    - Add toggles
-- Make forwarding number edit-when-clicked (and maybe format it too...kinda ugly now)
+- Spiff up phone page
 
 ## Bonus todos
 
