@@ -153,7 +153,7 @@ class Dispatcher
   end
 
   def receive_voicemail
-    Voicemail.for_call_sid(call_sid).tap do |vm|
+    voicemail = Voicemail.for_call_sid(call_sid).tap do |vm|
       vm.from = from
       vm.phone = phone
       vm.recording_url = recording_url
@@ -165,6 +165,8 @@ class Dispatcher
         Rails.logger.error "Unable to save voicemail: #{vm.errors.inspect}"
       end
     end
+
+    phone.notify_user_of_voicemail(voicemail)
 
     hang_up
   end

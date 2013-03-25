@@ -1,5 +1,6 @@
 class Phone < ActiveRecord::Base
-  attr_accessible :forwarding_number, :voicemail, :forwarding
+
+  attr_accessible :forwarding_number, :voicemail, :forwarding, :voicemail_notification_via_email, :voicemail_notification_via_sms
 
   has_many :voicemails, order: "created_at DESC"
   has_many :clients, class_name: TwilioClient
@@ -79,6 +80,21 @@ class Phone < ActiveRecord::Base
 
   def client
     clients.first || clients.create
+  end
+
+  def notify_user_of_voicemail(voicemail)
+    send_voicemail_notification_via_email(voicemail) if voicemail_notification_via_email
+    send_voicemail_notification_via_sms(voicemail) if voicemail_notification_via_sms
+  end
+
+  def send_voicemail_notification_via_email(voicemail)
+
+  end
+
+  def send_voicemail_notification_via_sms(voicemail)
+    url = Rails.application.routes.url_helpers.play_voicemail_url(voicemail)
+    message = "New voicemail from #{voicemail.from}. Listen here: #{url}"
+    TwilioWrapper.instance.send_sms(from: incoming_number, to: forwarding_number, body: message)
   end
 
   class NullPhone

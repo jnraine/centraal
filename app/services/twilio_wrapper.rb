@@ -2,6 +2,14 @@ require 'singleton'
 
 class TwilioWrapper
   include Singleton
+  
+  def send_sms(options)
+    account.sms.messages.create(from: options.fetch(:from), to: options.fetch(:to), body: options.fetch(:body))
+  end
+
+  # def call(recipient_number, call_params)
+  #   account.calls.create({:from => dispatch_number, :to => recipient_number, :url => call_params[:url]})
+  # end
 
   def account
     @account ||= client.account

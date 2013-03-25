@@ -53,7 +53,7 @@ class PhonesController < ApplicationController
       @phone = current_user.phones.first.decorate
       render :show
     else
-      redirect_to front_door_redirect
+      redirect_to root_path
     end
   end
 end

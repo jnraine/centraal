@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Phone do
   let(:bobs_office) { "+15551234567" }
   let(:amys_office) { "+15557654321" }
+  let(:phone) { create(:phone) }
 
   describe ".sync_numbers" do
     it "can sync missing phone numbers from Twilio" do
@@ -81,6 +82,34 @@ describe Phone do
       phone.connect_client
       phone.clients.should have(2).item
       phone.connected_clients.should have(1).item
+    end
+  end
+
+  describe "#notify_user_of_voicemail" do
+    let(:voicemail) do
+      Voicemail.new.tap do |vm|
+        vm.from = amys_office
+        vm.recording_url = "google.ca"
+      end
+    end
+    it "sends an email when enabled" do
+      phone.should_receive(:voicemail_notification_via_email).and_return(true)
+      phone.should_receive(:send_voicemail_notification_via_email).and_return
+      phone.notify_user_of_voicemail(voicemail)
+
+      phone.should_receive(:voicemail_notification_via_email).and_return(false)
+      phone.should_not_receive(:send_voicemail_notification_via_email)
+      phone.notify_user_of_voicemail(voicemail)
+    end
+
+    it "sends an sms when enabled" do
+      phone.should_receive(:voicemail_notification_via_sms).and_return(true)
+      phone.should_receive(:send_voicemail_notification_via_sms).and_return
+      phone.notify_user_of_voicemail(voicemail)
+
+      phone.should_receive(:voicemail_notification_via_sms).and_return(false)
+      phone.should_not_receive(:send_voicemail_notification_via_sms)
+      phone.notify_user_of_voicemail(voicemail)
     end
   end
 end

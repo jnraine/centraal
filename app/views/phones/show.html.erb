@@ -1,17 +1,17 @@
-<h3>
+<h2>
     <span class="incoming-number"><%= @phone.incoming_number %></span>
-</h3>
+</h2>
 <div class="phone row-fluid">
     <div class="phone-controls span4">
-        <h4>
+        <h3>
             <span class="incoming-number">Browser Phone</span>
-        </h4>
+        </h3>
         <%= render partial: "call_form" %>
     </div>
 
     <div class="span4">
-        <h4>Voicemail</h4>
-        <h5>Greeting</h5>
+        <h3>Voicemail</h3>
+        <h4>Greeting</h4>
         <div class="voicemail-greeting">
             <% if @phone.voicemail_greeting.present? %>
                 <%= icon name: "play", class: "audio-control icon-2x" %>
@@ -26,11 +26,13 @@
     </div>
 
     <div class="span4">
-        <h4>Settings</h4>
+        <h3>Settings</h3>
         <%= bootstrap_form_for @phone, url: phone_path(@phone, format: "json"), class: "form-horizontal", remote: true do |f| %>
           <%= f.text_field :forwarding_number, data: {"format-phone-number" => true} %>
           <%= f.on_off :forwarding, labelled: true %>
           <%= f.on_off :voicemail, labelled: true %>
+          <%= f.on_off :voicemail_notification_via_email, labelled: true %>
+          <%= f.on_off :voicemail_notification_via_sms, labelled: true %>
         <% end %>
     </div>
 </div>
