@@ -48,6 +48,22 @@ class TwilioWrapper
     twilio_numbers.map(&:phone_number)
   end
 
+  def total_price_since(date)
+    account.usage.records.list(category:"totalprice", start_date: date).first.price
+  end
+
+  def total_voice_minutes
+    account.usage.records.all_time.list(category:"calls").first.usage
+  end
+
+  def total_sms_messages
+    account.usage.records.all_time.list(category:"sms").first.usage
+  end
+
+  def last_month_total_price
+    account.usage.records.last_month.list(category:"totalprice").first.price
+  end
+
   def setting(name)
     ENV[setting_key(name)]
   end

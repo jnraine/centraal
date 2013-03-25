@@ -103,3 +103,36 @@ label {
   display:none;
   color: #b94a48;
 }
+
+.fun-facts .icon {
+  font-size: 4em;
+  background-color: #0088cc;
+  border-radius: 5px;
+  color: white;
+  float: left;
+  margin-right: 0.3em;
+  padding: 15px;
+}
+
+.fun-facts .item {
+  float:left;
+  min-width: 300px;
+}
+
+.fun-facts dt {
+  text-transform: uppercase;
+  color: #999999;
+  font-weight: normal;
+}
+
+.fun-facts dd {
+  color: #999999;
+  font-weight: normal;
+}
+
+.fun-facts dd em {
+  font-style: normal;
+  font-size: 3em;
+  line-height: 1em;
+  font-weight: 500;
+}

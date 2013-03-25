@@ -1,9 +1,50 @@
 <% @phones.each do |phone| %>
     <div>
         <h4><%= link_to phone.incoming_number, phone %></h4>
-    </div>    
+    </div>
 <% end %>
 
+<br>
+
+<div class="fun-facts">
+    <!-- The following is a poor imitation of the real thing: http://kerem.co/ -->
+    <% date = Date.today.at_beginning_of_month %>
+    <dl>
+        <div class="item">
+            <dt>
+                <%= icon(name: "money", class: "icon") %>
+                Cost since <%= date.strftime("%B %-d") %>
+            </dt>
+            <dd>
+                <em><%= number_to_currency(TwilioWrapper.instance.total_price_since(date)) %></em>
+                USD
+            </dd>
+        </div>
+
+        <div class="item">
+            <dt>
+                <%= icon(name: "phone", class: "icon") %>
+                Voice Calls
+            </dt>
+            <dd>
+                <em><%= TwilioWrapper.instance.total_voice_minutes %></em>
+                minutes
+            </dd>
+        </div>
+
+        <div class="item">
+            <dt>
+                <%= icon(name: "mobile-phone", class: "icon") %>
+                Text Messages
+            </dt>
+            <dd>
+                <em><%= TwilioWrapper.instance.total_sms_messages %></em>
+                sent
+            </dd>
+        </div>
+    </dl>
+</div>
+<div class="clearfix"></div>
 <br>
 
 <%= button icon(name: "refresh", label: "Sync Numbers"), sync_phones_path, method: :post, data: {"spin-on-click" => true, "click-text" => "Syncing..."} %>
