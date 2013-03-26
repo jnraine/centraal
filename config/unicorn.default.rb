@@ -1,4 +1,4 @@
-working_directory "/vagrant"
+working_directory "/PATH/TO/RAILS/ROOT"
 pid "/vagrant/tmp/pids/unicorn.pid"
 stderr_path "/vagrant/log/unicorn.log"
 stdout_path "/vagrant/log/unicorn.log"
