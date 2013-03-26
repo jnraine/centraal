@@ -5,6 +5,8 @@ class Phone < ActiveRecord::Base
   has_many :clients, class_name: TwilioClient
   has_many :connected_clients, class_name: TwilioClient, conditions: proc { "last_ping > '#{5.minutes.ago}'" }
 
+  belongs_to :owner, class_name: "User"
+
   validate :incoming_number, unique: true
   validates_each :incoming_number, :forwarding_number do |record, attr, value|
     record.errors.add(attr, "is invalid. Try something like (123) 555-1234.") unless valid_number?(value) or value.blank?

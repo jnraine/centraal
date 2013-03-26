@@ -48,16 +48,26 @@ class TwilioWrapper
     twilio_numbers.map(&:phone_number)
   end
 
+  def cache_key(name)
+    self.class.to_s + name
+  end
+
   def total_price_since(date)
-    account.usage.records.list(category:"totalprice", start_date: date).first.price
+    Rails.cache.fetch(cache_key("total_price_since"), expires_in: 1.day) do
+      account.usage.records.list(category:"totalprice", start_date: date).first.price
+    end
   end
 
   def total_voice_minutes
-    account.usage.records.all_time.list(category:"calls").first.usage
+    Rails.cache.fetch(cache_key("total_voice_minutes"), expires_in: 1.day) do
+      account.usage.records.all_time.list(category:"calls").first.usage
+    end
   end
 
   def total_sms_messages
-    account.usage.records.all_time.list(category:"sms").first.usage
+    Rails.cache.fetch(cache_key("total_sms_messages"), expires_in: 1.day) do
+      account.usage.records.all_time.list(category:"sms").first.usage
+    end
   end
 
   def last_month_total_price

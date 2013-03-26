@@ -17,6 +17,14 @@ class PhoneDecorator < Draper::Decorator
     model.forwarding ? "On" : "Off"
   end
 
+  def owner
+    if model.owner
+      h.avatar(model.owner.avatar_url) + h.content_tag(:span, model.owner.name, class: "owner-name")
+    else
+      h.link_to h.icon(name: "share-alt", label: "Invite Owner"), "#"
+    end
+  end
+
   def decorate_number(number)
     number = prettify_number(number)
     if number.present?

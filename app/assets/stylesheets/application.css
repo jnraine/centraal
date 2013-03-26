@@ -112,6 +112,7 @@ label {
   float: left;
   margin-right: 0.3em;
   padding: 15px;
+  margin-bottom:20px;
 }
 
 .fun-facts .item {
@@ -135,4 +136,9 @@ label {
   font-size: 3em;
   line-height: 1em;
   font-weight: 500;
+}
+
+.owner-name {
+  line-height: 35px;
+  padding-left: 5px;
 }

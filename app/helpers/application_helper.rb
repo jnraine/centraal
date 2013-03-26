@@ -34,4 +34,8 @@ module ApplicationHelper
   def call_form
     render(partial: "call_form").to_str
   end
+
+  def avatar(avatar_url)
+    image_tag avatar_url, class: "img-rounded"
+  end
 end

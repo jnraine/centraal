@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(:version => 20130325210951) do
     t.string   "incoming_number"
     t.string   "voicemail_greeting"
     t.string   "email"
-    t.integer  "user_id"
+    t.integer  "owner_id"
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
   end
