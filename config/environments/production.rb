@@ -73,5 +73,6 @@ Centraal::Application.configure do
   config.before_initialize do
     raise 'ENV["CENTRAAL_DEFAULT_HOST"] is not set!' unless ENV["CENTRAAL_DEFAULT_HOST"]
     Centraal::Application.routes.default_url_options[:host] = ENV["CENTRAAL_DEFAULT_HOST"]
+    ActionMailer::Base.default_url_options = {host: ENV["CENTRAAL_DEFAULT_HOST"]}
   end
 end
