@@ -76,7 +76,11 @@ Centraal::Application.configure do
     config.action_mailer.default_url_options = {host: ENV["CENTRAAL_DEFAULT_HOST"]}
   end
 
+  unless ENV["RAILS_SENDER"] and ENV["EXCEPTION_RECIPIENT"]
+    raise 'ENV["RAILS_SENDER"] and/or ENV["EXCEPTION_RECIPIENT"] are not set!'
+  end
+
   config.middleware.use ExceptionNotifier,
     sender_address: ENV["RAILS_SENDER"],
-    exception_recipients: ENV["EXCEPTION_RECIPIENT"],
+    exception_recipients: ENV["EXCEPTION_RECIPIENT"]
 end
