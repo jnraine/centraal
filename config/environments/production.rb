@@ -51,6 +51,11 @@ Centraal::Application.configure do
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false
 
+  raise "ENV['RAILS_SMTP_HOST'] is not set!" if ENV["RAILS_SMTP_HOST"].nil?
+  config.action_mailer.smtp_settings = {
+    address: ENV["RAILS_SMTP_HOST"]
+  }
+
   # Enable threaded mode
   # config.threadsafe!
 
@@ -64,4 +69,9 @@ Centraal::Application.configure do
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
+
+  config.before_initialize do
+    raise 'ENV["CENTRAAL_DEFAULT_HOST"] is not set!' unless ENV["CENTRAAL_DEFAULT_HOST"]
+    Centraal::Application.routes.default_url_options[:host] = ENV["CENTRAAL_DEFAULT_HOST"]
+  end
 end

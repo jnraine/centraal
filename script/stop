@@ -1,0 +1,4 @@
+#!/bin/bash
+source ~/.bash_profile
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+kill $(cat $DIR/../tmp/pids/unicorn.pid)
