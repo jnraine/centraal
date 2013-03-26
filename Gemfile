@@ -4,7 +4,7 @@ gem 'rails', '3.2.12'
 gem 'sqlite3'
 gem "twilio-ruby", "~> 3.9.0"
 gem "omniauth-cas"
-gem "shortener", path: "/Users/jnraine/code/shortener"#git: "https://github.com/jnraine/shortener"
+gem "shortener", git: "https://github.com/jnraine/shortener"
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -29,6 +29,7 @@ gem "therubyracer"
 gem "less-rails"
 gem "twitter-bootstrap-rails"
 gem "draper", "~> 1.1.0"
+gem "unicorn"
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
