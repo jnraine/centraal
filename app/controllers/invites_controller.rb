@@ -5,7 +5,7 @@ class InvitesController < ApplicationController
     @invite = Invite.create(phone_id: params[:phone_id], recipient: params[:recipient])  
 
     if @invite.present?
-      Rails.logger.info InviteMailer.invite_email(@invite).deliver.inspect
+      InviteMailer.invite_email(@invite).deliver
       flash[:notice] = "Invitation delivered to #{@invite.recipient}"
     else
       flash[:error] = "Something went wrong while creating the invite"
