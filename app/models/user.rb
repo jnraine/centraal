@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   attr_accessible :login
 
   has_many :sessions
-  has_many :phones
+  has_many :phones, foreign_key: :owner_id
 
   def self.for_session_id(session_id)
     session = Session.where(:id => session_id).first

@@ -1,0 +1,5 @@
+<%= form_tag invite_path, method: :post do %>
+    <%= text_field_tag "recipient", "", placeholder: "recipient email" %>
+    <%= hidden_field_tag "phone_id", phone.id %>
+    <%= submit_tag "Send Invitation", class: "btn btn-block" %>
+<% end -%>

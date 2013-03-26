@@ -4,6 +4,7 @@ class Phone < ActiveRecord::Base
   has_many :voicemails, order: "created_at DESC"
   has_many :clients, class_name: TwilioClient
   has_many :connected_clients, class_name: TwilioClient, conditions: proc { "last_ping > '#{5.minutes.ago}'" }
+  has_one :invite
 
   belongs_to :owner, class_name: "User"
 

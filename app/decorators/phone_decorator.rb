@@ -21,7 +21,7 @@ class PhoneDecorator < Draper::Decorator
     if model.owner
       h.avatar(model.owner.avatar_url) + h.content_tag(:span, model.owner.name, class: "owner-name")
     else
-      h.link_to h.icon(name: "share-alt", label: "Invite Owner"), "#"
+      h.invite_link(model)
     end
   end
 

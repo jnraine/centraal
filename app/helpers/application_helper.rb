@@ -38,4 +38,16 @@ module ApplicationHelper
   def avatar(avatar_url)
     image_tag avatar_url, class: "img-rounded"
   end
+
+  def invite_form(phone)
+    render(partial: "invite_form", locals: {phone: phone}).to_str
+  end
+
+  def invite_link(phone)
+    if phone.invite.blank?
+      link_to icon(name: "share-alt", label: "Invite Owner"), "#", data: {toggle: "popover", placement: "bottom", content: invite_form(phone)}
+    else
+      "Invite sent to #{phone.invite.recipient}"
+    end
+  end
 end

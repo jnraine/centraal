@@ -20,5 +20,8 @@ Centraal::Application.routes.draw do
     get "zero", on: :collection
   end
 
+  match "/invite" => "invites#create", via: :post, as: "invite"
+  match "/invite/:token" => "invites#accept", as: "accept_invitation"
+
   root to: "application#front_door_redirect"
 end

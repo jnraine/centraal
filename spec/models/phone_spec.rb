@@ -92,22 +92,13 @@ describe Phone do
         vm.recording_url = "google.ca"
       end
     end
-    it "sends an email when enabled" do
-      phone.should_receive(:voicemail_notification_via_email).and_return(true)
-      phone.should_receive(:send_voicemail_notification_via_email).and_return
-      phone.notify_user_of_voicemail(voicemail)
-
-      phone.should_receive(:voicemail_notification_via_email).and_return(false)
-      phone.should_not_receive(:send_voicemail_notification_via_email)
-      phone.notify_user_of_voicemail(voicemail)
-    end
 
     it "sends an sms when enabled" do
-      phone.should_receive(:voicemail_notification_via_sms).and_return(true)
+      phone.should_receive(:sms_notifications).and_return(true)
       phone.should_receive(:send_voicemail_notification_via_sms).and_return
       phone.notify_user_of_voicemail(voicemail)
 
-      phone.should_receive(:voicemail_notification_via_sms).and_return(false)
+      phone.should_receive(:sms_notifications).and_return(false)
       phone.should_not_receive(:send_voicemail_notification_via_sms)
       phone.notify_user_of_voicemail(voicemail)
     end
