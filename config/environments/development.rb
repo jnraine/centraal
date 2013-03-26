@@ -16,11 +16,7 @@ Centraal::Application.configure do
   # Send the mail, dammit!
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.delivery_method = :sendmail
-  config.action_mailer.sendmail_settings = {
-    :location => '/usr/sbin/sendmail',
-    :arguments => '-i -t'
-  }
+  config.action_mailer.delivery_method = :letter_opener
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
@@ -40,6 +36,10 @@ Centraal::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  config.middleware.use ExceptionNotifier,
+    sender_address: "app@example.com",
+    exception_recipients: "sysadmin@example.com"
 
   config.before_initialize do                                                                                                                                                                                                       
     Centraal::Application.routes.default_url_options[:host] = "bartok.itds.sfu.ca:3000"

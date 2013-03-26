@@ -75,4 +75,8 @@ Centraal::Application.configure do
     Centraal::Application.routes.default_url_options[:host] = ENV["CENTRAAL_DEFAULT_HOST"]
     config.action_mailer.default_url_options = {host: ENV["CENTRAAL_DEFAULT_HOST"]}
   end
+
+  config.middleware.use ExceptionNotifier,
+    sender_address: ENV["RAILS_SENDER"],
+    exception_recipients: ENV["EXCEPTION_RECIPIENT"],
 end

@@ -19,6 +19,7 @@ group :assets do
 end
 
 group :development, :test do
+  gem "letter_opener"
   gem 'rspec-rails'
   gem "database_cleaner", "~> 0.9.1"
   gem "factory_girl_rails", "~> 4.2.0"
@@ -30,6 +31,7 @@ gem "less-rails"
 gem "twitter-bootstrap-rails"
 gem "draper", "~> 1.1.0"
 gem "unicorn"
+gem "exception_notification"
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

@@ -53,6 +53,8 @@ GEM
       activesupport (>= 3.0)
       request_store (~> 1.0.3)
     erubis (2.7.0)
+    exception_notification (3.0.1)
+      actionmailer (>= 3.0.4)
     execjs (1.4.0)
       multi_json (~> 1.0)
     factory_girl (4.2.0)
@@ -71,11 +73,15 @@ GEM
     jwt (0.1.8)
       multi_json (>= 1.5)
     kgio (2.8.0)
+    launchy (2.2.0)
+      addressable (~> 2.3)
     less (2.3.1)
       commonjs (~> 0.2.6)
     less-rails (2.3.2)
       actionpack (>= 3.1)
       less (~> 2.3.1)
+    letter_opener (1.1.0)
+      launchy (~> 2.2.0)
     libv8 (3.11.8.17)
     mail (2.4.4)
       i18n (>= 0.4.0)
@@ -174,9 +180,11 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   database_cleaner (~> 0.9.1)
   draper (~> 1.1.0)
+  exception_notification
   factory_girl_rails (~> 4.2.0)
   jquery-rails
   less-rails
+  letter_opener
   omniauth-cas
   rails (= 3.2.12)
   rspec-rails
