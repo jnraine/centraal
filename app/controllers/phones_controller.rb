@@ -1,5 +1,5 @@
 class PhonesController < ApplicationController
-  before_filter :require_admin, except: [:show, :update]
+  before_filter :require_admin, except: [:update, :user, :zero]
 
   def index
     @phones = Phone.scoped.decorate
@@ -43,7 +43,7 @@ class PhonesController < ApplicationController
   end
 
   def zero
-    redirect_to root_path unless current_user.phones.zero?
+    redirect_to root_path unless current_user.phones.length.zero?
   end
 
   def user

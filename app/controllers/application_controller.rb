@@ -6,17 +6,20 @@ class ApplicationController < ActionController::Base
   def front_door_redirect
     if current_user.phones.present?
       redirect_to user_phone_path
+      return
     elsif current_user.admin?
       redirect_to phones_path
+      return
     else
       redirect_to zero_phones_path
+      return
     end
   end
 
   private
   
   def require_admin
-    redirect_to front_door_redirect unless current_user.admin?
+    front_door_redirect unless current_user.admin?
   end
 
   def require_login

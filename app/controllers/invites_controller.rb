@@ -1,5 +1,5 @@
 class InvitesController < ApplicationController
-  before_filter :require_admin
+  before_filter :require_admin, except: [:accept]
 
   def create
     @invite = Invite.create(phone_id: params[:phone_id], recipient: params[:recipient])  
