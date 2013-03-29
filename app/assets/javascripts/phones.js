@@ -40,6 +40,7 @@ function connectPhone(token, pingPath) {
         setInterval(pingClient, 120000); // ping server every 2 minutes
         pingClient();
         setStatusReady();
+        dialUrlNumber();
     });
 
     Twilio.Device.incoming(function (incomingConnection) {
@@ -167,6 +168,25 @@ $(document).ready(function() {
             }
         });
 });
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regexS = "[\\?&]" + name + "=([^&#]*)";
+    var regex = new RegExp(regexS);
+    var results = regex.exec(window.location.search);
+    if(results === null) {
+        return "";
+    } else {
+        return decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+}
+
+function dialUrlNumber() {
+    var outgoingNumber = getParameterByName("outgoingNumber");
+    if(outgoingNumber !== "") {
+        $("#outgoing-number").val(outgoingNumber).submit();
+    }
+}
 
 function formatNumber(number) {
     var formatted = number.replace(/[^0-9\*#]/g,"");
